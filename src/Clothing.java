@@ -4,6 +4,7 @@
  * @author Isuru Gimhana
  */
 public class Clothing extends Product{
+    // instance variables
     private String productId; // product id
     private String productName; // product name
     private int numAvailableItems; // number of available items of the product

@@ -11,6 +11,16 @@ public class Electronics extends Product{
     private double productPrice; // the product price
     private String electronicBrand; // the brand of the Electronic product
     private int electronicWarrantyPeriod; // the warranty period of the Electronic product
+
+    /**
+     * Constructs a new electronics object
+     * @param productId - the products id
+     * @param productName - the product name
+     * @param numAvailableItems - number of available items of the product
+     * @param productPrice - the product price
+     * @param electronicBrand - the brand of the Electronic product
+     * @param electronicWarrantyPeriod - the warranty period of the Electronic product
+     */
     public Electronics(String productId, String productName, int numAvailableItems, double productPrice, String electronicBrand, int electronicWarrantyPeriod) {
         super(productId, productName, numAvailableItems, productPrice);
         this.electronicBrand = electronicBrand;

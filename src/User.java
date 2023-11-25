@@ -8,6 +8,11 @@ public class User {
     private String userName; // user name
     private String userPassword; // user password
 
+    /**
+     * Constructs a new user object
+     * @param userName - the user name
+     * @param userPassword - the user password
+     */
     public User(String userName, String userPassword){
         this.userName = userName;
         this.userPassword = userPassword;

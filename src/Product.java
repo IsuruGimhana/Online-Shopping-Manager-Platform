@@ -7,7 +7,7 @@ public abstract class Product {
     private String productId; // product id
     private String productName; // product name
     private int numAvailableItems; // number of available items of the product
-    private boolean productPrice; // the product price
+    private double productPrice; // the product price
     /**
      * Constructs a new product object
      * @param productId - the products id
@@ -15,13 +15,15 @@ public abstract class Product {
      * @param numAvailableItems - number of available items of the product
      * @param productPrice - the product price
     */
-    public Product(String productId, String productName, int numAvailableItems, boolean productPrice) {
+    public Product(String productId, String productName, int numAvailableItems, double productPrice) {
         this.productId = productId;
         this.productName = productName;
         this.numAvailableItems = numAvailableItems;
         this.productPrice = productPrice;
     }
-
+/**
+ * getters and setters
+*/
     public String getProductId() {
         return productId;
     }
@@ -31,7 +33,7 @@ public abstract class Product {
     public int getNumAvailableItems() {
         return numAvailableItems;
     }
-    public boolean getProductPrice() {
+    public double getProductPrice() {
         return productPrice;
     }
 

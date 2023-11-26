@@ -114,6 +114,8 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 }
                 this.productList.remove(product);
                 System.out.println("Product deleted successfully!");
+                int totalProducts = productList.size();
+                System.out.println("Total number of products left in the System: " + totalProducts);
                 return;
             }
         }

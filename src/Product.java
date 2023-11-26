@@ -3,7 +3,7 @@
  *
  * @author Isuru Gimhana
  */
-public abstract class Product {
+public abstract class Product implements Comparable<Product> {
     // instance variables
     private String productId; // product id
     private String productName; // product name
@@ -59,5 +59,8 @@ public abstract class Product {
                 ", numAvailableItems=" + numAvailableItems +
                 ", productPrice=" + productPrice +
                 '}';
+    }
+    public int compareTo(Product product) {
+        return this.productId.compareTo(product.getProductId());
     }
 }

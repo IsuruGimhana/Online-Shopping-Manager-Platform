@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -122,6 +123,16 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
     @Override
     public void getProductList() {
+        Collections.sort(productList);
+        for (Product product : this.productList) {
+            if (product instanceof Electronics) {
+                Electronics electronics = (Electronics) product;
+                System.out.println(electronics.toString());
+            } else {
+                Clothing clothing = (Clothing) product;
+                System.out.println(clothing.toString());
+            }
+        }
     }
     @Override
     public void saveProductList() {

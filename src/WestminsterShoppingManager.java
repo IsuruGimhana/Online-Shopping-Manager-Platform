@@ -82,7 +82,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
                 this.productList.add(clothing);
             }
-            System.out.println("Product added successfully!\n" +
+            System.out.print("Product added successfully!\n" +
                     "------------------------------------------------------\n" +
                     "Do you want to add another product? (Y/N): ");
             String answer2 = scanner.next();
@@ -90,7 +90,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
             if (answer2Lower.equals("y")) {
                 addProduct(scanner);
             } else if (answer2Lower.equals("n")) {
-                // return to menu
+                return;
             } else {
                 System.out.println("Invalid input!");
             }
@@ -114,11 +114,23 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     System.out.println(clothing.toString());
                 }
                 this.productList.remove(product);
-                System.out.println("Product deleted successfully!");
+                System.out.println("\nProduct deleted successfully!");
                 int totalProducts = productList.size();
-                System.out.println("Total number of products left in the System: " + totalProducts);
-                return;
+                System.out.println("\nTotal number of products left in the System: " + totalProducts);
+            } else {
+                System.out.println("Invalid input!");
             }
+        }
+        System.out.print("------------------------------------------------------\n" +
+                "Do you want to delete another product? (Y/N): ");
+        String answer2 = scanner.next();
+        String answer2Lower = answer2.toLowerCase();
+        if (answer2Lower.equals("y")) {
+            deleteProduct(scanner);
+        } else if (answer2Lower.equals("n")) {
+            return;
+        } else {
+            System.out.println("Invalid input!");
         }
     }
     @Override
@@ -133,6 +145,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 System.out.println(clothing.toString());
             }
         }
+        System.out.println("\nProduct List ordered by product id successfully!");
     }
     @Override
     public void saveProductList() {

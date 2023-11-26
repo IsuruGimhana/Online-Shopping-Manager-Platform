@@ -42,4 +42,16 @@ public class Clothing extends Product{
     public void setClothingColour(String clothingColour) {
         this.clothingColour = clothingColour;
     }
+
+    @Override
+    public String toString() {
+        return "Clothing{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", numAvailableItems=" + numAvailableItems +
+                ", productPrice=" + productPrice +
+                ", clothingSize=" + clothingSize +
+                ", clothingColour='" + clothingColour + '\'' +
+                '}';
+    }
 }

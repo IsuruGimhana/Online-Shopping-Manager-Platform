@@ -25,14 +25,31 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 "4. Exit the program\n" +
                 "------------------------------------------------------\n" +
                 "Select an option: ");
+        Scanner scanner = new Scanner(System.in);
+        switch (scanner.nextInt()) {
+            case 1:
+                addProduct(scanner);
+                break;
+            case 2:
+                deleteProduct(scanner);
+                break;
+            case 3:
+                getProductList();
+                break;
+            case 4:
+                saveProductList();
+                break;
+            default:
+                System.out.println("Invalid input!");
+                break;
+        }
     }
     @Override
-    public void addProduct(Product product) {
+    public void addProduct(Scanner scanner) {
         if (this.productList.size() >= MAX_PRODUCT) {
             System.out.println("The product list is full!");
             return;
         }
-        Scanner scanner = new Scanner(System.in);
         System.out.print("------------------------------------------------------\n" +
                 "1. Add a new Electronic to the system\n" +
                 "2. Add a new Clothing to the system\n" +
@@ -54,28 +71,52 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 String productBrand = scanner.nextLine();
                 System.out.print("Enter product warranty: ");
                 int productWarranty = scanner.nextInt();
-                Electronics electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
+                Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
                 this.productList.add(electronic);
             } else {
                 System.out.print("Enter product size: ");
                 double productSize = scanner.nextDouble();
                 System.out.print("Enter product colour: ");
                 String productColour = scanner.nextLine();
-                Clothing clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
+                Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
                 this.productList.add(clothing);
             }
             System.out.println("Product added successfully!\n" +
                     "------------------------------------------------------\n" +
                     "Do you want to add another product? (Y/N): ");
             String answer2 = scanner.next();
+            String answer2Lower = answer2.toLowerCase();
+            if (answer2Lower.equals("y")) {
+                addProduct(scanner);
+            } else if (answer2Lower.equals("n")) {
+                // return to menu
+            } else {
+                System.out.println("Invalid input!");
+            }
         } else {
             System.out.println("Invalid input!");
         }
     }
 
     @Override
-    public void deleteProduct(Product product) {
-        this.productList.remove(product);
+    public void deleteProduct(Scanner scanner) {
+        System.out.print("------------------------------------------------------\n" +
+                "Enter product id: ");
+        String productId = scanner.next();
+        for (Product product : this.productList) {
+            if (product.getProductId().equals(productId)) {
+                if (product instanceof Electronics) {
+                    Electronics electronics = (Electronics) product;
+                    System.out.println(electronics.toString());
+                } else {
+                    Clothing clothing = (Clothing) product;
+                    System.out.println(clothing.toString());
+                }
+                this.productList.remove(product);
+                System.out.println("Product deleted successfully!");
+                return;
+            }
+        }
     }
     @Override
     public void getProductList() {

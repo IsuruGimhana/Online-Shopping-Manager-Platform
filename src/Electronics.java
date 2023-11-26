@@ -42,4 +42,16 @@ public class Electronics extends Product{
     public void setElectronicWarrantyPeriod(int electronicWarrantyPeriod) {
         this.electronicWarrantyPeriod = electronicWarrantyPeriod;
     }
+
+    @Override
+    public String toString() {
+        return "Electronics{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", numAvailableItems=" + numAvailableItems +
+                ", productPrice=" + productPrice +
+                ", electronicBrand='" + electronicBrand + '\'' +
+                ", electronicWarrantyPeriod=" + electronicWarrantyPeriod +
+                '}';
+    }
 }

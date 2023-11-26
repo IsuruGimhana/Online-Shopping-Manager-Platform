@@ -50,4 +50,14 @@ public abstract class Product {
     public void setProductPrice() {
         this.productPrice = productPrice;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", numAvailableItems=" + numAvailableItems +
+                ", productPrice=" + productPrice +
+                '}';
+    }
 }

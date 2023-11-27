@@ -173,5 +173,28 @@ public class WestminsterShoppingManager implements ShoppingManager{
         }
     }
 
-    public void loadProductList()
+    public static void loadProductList() {
+        File file = new File("Existing Products/saveProductList.txt");
+        try(Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] savedList = line.substring(8, line.length()-1).split(",");
+                String productId = savedList[0].substring(11, savedList[0].length()-1);
+                String productName = savedList[1].substring(13, savedList[1].length()-1);
+                int numAvailableItems = Integer.parseInt(savedList[2].substring(18));
+                double productPrice = Double.parseDouble(savedList[3].substring(13));
+                if (savedList[4].startsWith("clothingSize")){
+                    double productSize = Double.parseDouble(savedList[4].substring(13));
+                    String productColour = savedList[5].substring(16, savedList[5].length()-1);
+                    Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
+                } else {
+                    String productBrand = savedList[4].substring(17, savedList[4].length()-1);
+                    int productWarranty = Integer.parseInt(savedList[5].substring(25));
+                    Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

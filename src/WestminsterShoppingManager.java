@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -38,7 +42,12 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 getProductList();
                 break;
             case 4:
-                saveProductList();
+                try {
+                    saveProductList(scanner);
+                } catch (IOException e) {
+                    System.out.println("An error occurred! while saving the product list");
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println("Invalid input!");
@@ -82,7 +91,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
                 this.productList.add(clothing);
             }
-            System.out.print("Product added successfully!\n" +
+            System.out.print("\nProduct added successfully!\n" +
                     "------------------------------------------------------\n" +
                     "Do you want to add another product? (Y/N): ");
             String answer2 = scanner.next();
@@ -92,10 +101,10 @@ public class WestminsterShoppingManager implements ShoppingManager{
             } else if (answer2Lower.equals("n")) {
                 return;
             } else {
-                System.out.println("Invalid input!");
+                System.out.println("\nInvalid input!");
             }
         } else {
-            System.out.println("Invalid input!");
+            System.out.println("\nInvalid input!");
         }
     }
 
@@ -118,7 +127,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 int totalProducts = productList.size();
                 System.out.println("\nTotal number of products left in the System: " + totalProducts);
             } else {
-                System.out.println("Invalid input!");
+                System.out.println("\nInvalid input!");
             }
         }
         System.out.print("------------------------------------------------------\n" +
@@ -130,7 +139,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
         } else if (answer2Lower.equals("n")) {
             return;
         } else {
-            System.out.println("Invalid input!");
+            System.out.println("\nInvalid input!");
         }
     }
     @Override
@@ -148,7 +157,21 @@ public class WestminsterShoppingManager implements ShoppingManager{
         System.out.println("\nProduct List ordered by product id successfully!");
     }
     @Override
-    public void saveProductList() {
-
+    public void saveProductList(Scanner scanner) throws IOException {
+//        System.out.println("Enter file name: ");
+//        String newFile = scanner.next();
+//        File file = new File("Existing Products/" + newFile + ".txt");
+        File file = new File("Existing Products/saveProductList.txt");
+        try(FileWriter fileWriter = new FileWriter(file, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            for (Product product : this.productList) {
+                bufferedWriter.write(product.toString());
+                bufferedWriter.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public void loadProductList()
 }

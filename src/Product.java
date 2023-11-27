@@ -54,11 +54,11 @@ public abstract class Product implements Comparable<Product> {
     @Override
     public String toString() {
         return "Product{" +
-                "productId='" + productId + '\'' +
-                ", productName='" + productName + '\'' +
+                "productId='" + productId + "'" +
+                ", productName='" + productName + "'" +
                 ", numAvailableItems=" + numAvailableItems +
                 ", productPrice=" + productPrice +
-                '}';
+                "}";
     }
     public int compareTo(Product product) {
         return this.productId.compareTo(product.getProductId());

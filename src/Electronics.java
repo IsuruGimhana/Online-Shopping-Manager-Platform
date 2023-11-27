@@ -46,12 +46,12 @@ public class Electronics extends Product{
     @Override
     public String toString() {
         return "Electronics{" +
-                "productId='" + productId + '\'' +
-                ", productName='" + productName + '\'' +
+                "productId='" + productId + "'" +
+                ", productName='" + productName + "'" +
                 ", numAvailableItems=" + numAvailableItems +
                 ", productPrice=" + productPrice +
-                ", electronicBrand='" + electronicBrand + '\'' +
+                ", electronicBrand='" + electronicBrand + "'" +
                 ", electronicWarrantyPeriod=" + electronicWarrantyPeriod +
-                '}';
+                "}";
     }
 }

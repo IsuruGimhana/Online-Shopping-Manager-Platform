@@ -46,12 +46,12 @@ public class Clothing extends Product{
     @Override
     public String toString() {
         return "Clothing{" +
-                "productId='" + productId + '\'' +
-                ", productName='" + productName + '\'' +
+                "productId='" + productId + "'" +
+                ", productName='" + productName + "'" +
                 ", numAvailableItems=" + numAvailableItems +
                 ", productPrice=" + productPrice +
                 ", clothingSize=" + clothingSize +
-                ", clothingColour='" + clothingColour + '\'' +
-                '}';
+                ", clothingColour='" + clothingColour + "'" +
+                "}";
     }
 }

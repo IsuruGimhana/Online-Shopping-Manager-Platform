@@ -71,6 +71,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     "Enter product id: ");
             String productId = scanner.next();
             System.out.print("Enter product name: ");
+            scanner.nextLine();
             String productName = scanner.nextLine();
             System.out.print("Enter number of available items: ");
             int numAvailableItems = scanner.nextInt();
@@ -78,6 +79,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
             double productPrice = scanner.nextDouble();
             if (answer == 1) {
                 System.out.print("Enter product brand: ");
+                scanner.nextLine();
                 String productBrand = scanner.nextLine();
                 System.out.print("Enter product warranty: ");
                 int productWarranty = scanner.nextInt();
@@ -87,6 +89,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 System.out.print("Enter product size: ");
                 double productSize = scanner.nextDouble();
                 System.out.print("Enter product colour: ");
+                scanner.nextLine();
                 String productColour = scanner.nextLine();
                 Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
                 this.productList.add(clothing);
@@ -175,6 +178,15 @@ public class WestminsterShoppingManager implements ShoppingManager{
 
     public static void loadProductList() {
         File file = new File("Existing Products/saveProductList.txt");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                System.out.println("An error occurred! while creating the file");
+                e.printStackTrace();
+            }
+            return;
+        }
         try(Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();

@@ -27,11 +27,29 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 "1. Add a new product to the system\n" +
                 "2. Delete a product from the system\n" +
                 "3. Print all the products in the system\n" +
-                "4. Exit the program\n" +
+                "4. Save the list of products that have been added to the system\n" +
+                "5. Exit the program\n" +
                 "------------------------------------------------------\n" +
                 "Select an option: ");
         Scanner scanner = new Scanner(System.in);
-        switch (scanner.nextInt()) {
+        int menuAnswer = 0;
+        while (true) {
+            if (scanner.hasNextInt()) {
+                menuAnswer = scanner.nextInt();
+                if (menuAnswer > 0 && menuAnswer < 6) {
+                    break;
+                } else {
+                    System.out.println("Invalid input!");
+                    System.out.println("Please enter a valid input");
+                    scanner.next();
+                }
+            } else {
+                System.out.println("Invalid input!");
+                System.out.println("Please enter a valid input");
+                scanner.next();
+            }
+        }
+        switch (menuAnswer) {
             case 1:
                 addProduct(scanner);
                 break;
@@ -49,11 +67,13 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     e.printStackTrace();
                 }
                 break;
-            default:
-                System.out.println("Invalid input!");
+            case 5:
+                System.out.println("Thank you!");
+                System.exit(0);
                 break;
         }
     }
+
     @Override
     public void addProduct(Scanner scanner) {
         if (productList.size() >= MAX_PRODUCT) {
@@ -102,33 +122,21 @@ public class WestminsterShoppingManager implements ShoppingManager{
             if (answer2Lower.equals("y")) {
                 addProduct(scanner);
             } else if (answer2Lower.equals("n")) {
-                return;
+                menu();
             } else {
-                System.out.println("Invalid input!");
                 inputErrorHandling(scanner, "Add a new product to the system");
             }
         } else {
             inputErrorHandling(scanner, "Add a new product to the system");
-//            System.out.print("Invalid input!\n" +
-//                    "Please enter a valid input\n" +
-//                    "------------------------------------------------------\n" +
-//                    "1. Add a new Electronic to the system\n" +
-//                    "2. Return to main menu\n" +
-//                    "Select an option: ");
-//            int answer3 = scanner.nextInt();
-//            if (answer3 == 1) {
-//                addProduct(scanner);
-//            } else if (answer3 == 2) {
-//                menu();
-//            } else {
-//                System.out.println("Invalid input!");
-//            }
-
         }
     }
 
     @Override
     public void deleteProduct(Scanner scanner) {
+        if (productList.size() == 0) {
+            System.out.println("The product list is empty!");
+            menu();
+        }
         System.out.print("------------------------------------------------------\n" +
                 "Enter product id: ");
         String productId = scanner.next();
@@ -156,14 +164,18 @@ public class WestminsterShoppingManager implements ShoppingManager{
         if (answer2Lower.equals("y")) {
             deleteProduct(scanner);
         } else if (answer2Lower.equals("n")) {
-            return;
+            menu();
         } else {
-            System.out.println("\nInvalid input!");
+            inputErrorHandling(scanner, "Delete a product from the system");
         }
     }
     @Override
     public void getProductList() {
         Collections.sort(productList);
+        if (productList.size() == 0) {
+            System.out.println("The product list is empty!");
+            menu();
+        }
         for (Product product : productList) {
             if (product instanceof Electronics) {
                 Electronics electronics = (Electronics) product;
@@ -187,21 +199,17 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 bufferedWriter.write(product.toString());
                 bufferedWriter.newLine();
             }
+            System.out.println("\nProduct List saved successfully!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadProductList() {
+    public void loadProductList() {
         File file = new File("Existing Products/saveProductList.txt");
         if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                System.out.println("An error occurred! while creating the file");
-                e.printStackTrace();
-            }
-            return;
+            System.out.println("The file does not exist!");
+            menu();
         }
         try(Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
@@ -240,6 +248,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
             menu();
         } else {
             System.out.println("Invalid input!");
+            inputErrorHandling(scanner, message);
         }
     }
 }

@@ -3,12 +3,8 @@
  *
  * @author Isuru Gimhana
  */
-public class Electronics extends Product{
+public class Electronics extends Product {
     // instance variables
-    private String productId; // product id
-    private String productName; // product name
-    private int numAvailableItems; // number of available items of the product
-    private double productPrice; // the product price
     private String electronicBrand; // the brand of the Electronic product
     private int electronicWarrantyPeriod; // the warranty period of the Electronic product
 
@@ -46,12 +42,9 @@ public class Electronics extends Product{
     @Override
     public String toString() {
         return "Electronics{" +
-                "productId='" + productId + "'" +
-                ", productName='" + productName + "'" +
-                ", numAvailableItems=" + numAvailableItems +
-                ", productPrice=" + productPrice +
-                ", electronicBrand='" + electronicBrand + "'" +
-                ", electronicWarrantyPeriod=" + electronicWarrantyPeriod +
+                super.toString() +
+                ", electronicBrand='" + this.electronicBrand + "'" +
+                ", electronicWarrantyPeriod=" + this.electronicWarrantyPeriod +
                 "}";
     }
 }

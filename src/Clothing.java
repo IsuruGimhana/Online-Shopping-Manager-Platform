@@ -3,12 +3,8 @@
  *
  * @author Isuru Gimhana
  */
-public class Clothing extends Product{
+public class Clothing extends Product {
     // instance variables
-    private String productId; // product id
-    private String productName; // product name
-    private int numAvailableItems; // number of available items of the product
-    private double productPrice; // the product price
     private double clothingSize; // the size of the clothing
     private  String clothingColour; // the colour of the clothing
 
@@ -46,10 +42,7 @@ public class Clothing extends Product{
     @Override
     public String toString() {
         return "Clothing{" +
-                "productId='" + productId + "'" +
-                ", productName='" + productName + "'" +
-                ", numAvailableItems=" + numAvailableItems +
-                ", productPrice=" + productPrice +
+                super.toString() +
                 ", clothingSize=" + clothingSize +
                 ", clothingColour='" + clothingColour + "'" +
                 "}";

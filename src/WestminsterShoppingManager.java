@@ -105,22 +105,24 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 return;
             } else {
                 System.out.println("Invalid input!");
+                inputErrorHandling(scanner, "Add a new product to the system");
             }
         } else {
-            System.out.print("Invalid input!\n" +
-                    "Please enter a valid input\n" +
-                    "------------------------------------------------------\n" +
-                    "1. Add a new Electronic to the system\n" +
-                    "2. Return to main menu\n" +
-                    "Select an option: ");
-            int answer3 = scanner.nextInt();
-            if (answer3 == 1) {
-                addProduct(scanner);
-            } else if (answer3 == 2) {
-                menu();
-            } else {
-                System.out.println("Invalid input!");
-            }
+            inputErrorHandling(scanner, "Add a new product to the system");
+//            System.out.print("Invalid input!\n" +
+//                    "Please enter a valid input\n" +
+//                    "------------------------------------------------------\n" +
+//                    "1. Add a new Electronic to the system\n" +
+//                    "2. Return to main menu\n" +
+//                    "Select an option: ");
+//            int answer3 = scanner.nextInt();
+//            if (answer3 == 1) {
+//                addProduct(scanner);
+//            } else if (answer3 == 2) {
+//                menu();
+//            } else {
+//                System.out.println("Invalid input!");
+//            }
 
         }
     }
@@ -221,6 +223,23 @@ public class WestminsterShoppingManager implements ShoppingManager{
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void inputErrorHandling(Scanner scanner, String message) {
+        System.out.print("Invalid input!\n" +
+                "Please enter a valid input\n" +
+                "------------------------------------------------------\n" +
+                "1. " + message + "\n" +
+                "2. Return to main menu\n" +
+                "Select an option: ");
+        int answer3 = scanner.nextInt();
+        if (answer3 == 1) {
+            addProduct(scanner);
+        } else if (answer3 == 2) {
+            menu();
+        } else {
+            System.out.println("Invalid input!");
         }
     }
 }

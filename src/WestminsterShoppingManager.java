@@ -12,11 +12,11 @@ import java.util.Scanner;
  * @author Isuru Gimhana
  */
 public class WestminsterShoppingManager implements ShoppingManager{
-    private ArrayList<Product> productList;
+    private static ArrayList<Product> productList;
     private static final int MAX_PRODUCT = 50;
 
     public WestminsterShoppingManager() {
-        this.productList = new ArrayList<>();
+        productList = new ArrayList<>();
     }
     public void menu() {
         System.out.print("------------------------------------------------------\n" +
@@ -56,7 +56,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
     @Override
     public void addProduct(Scanner scanner) {
-        if (this.productList.size() >= MAX_PRODUCT) {
+        if (productList.size() >= MAX_PRODUCT) {
             System.out.println("The product list is full!");
             return;
         }
@@ -84,7 +84,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 System.out.print("Enter product warranty: ");
                 int productWarranty = scanner.nextInt();
                 Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
-                this.productList.add(electronic);
+                productList.add(electronic);
             } else {
                 System.out.print("Enter product size: ");
                 double productSize = scanner.nextDouble();
@@ -92,7 +92,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 scanner.nextLine();
                 String productColour = scanner.nextLine();
                 Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
-                this.productList.add(clothing);
+                productList.add(clothing);
             }
             System.out.print("\nProduct added successfully!\n" +
                     "------------------------------------------------------\n" +
@@ -104,10 +104,24 @@ public class WestminsterShoppingManager implements ShoppingManager{
             } else if (answer2Lower.equals("n")) {
                 return;
             } else {
-                System.out.println("\nInvalid input!");
+                System.out.println("Invalid input!");
             }
         } else {
-            System.out.println("\nInvalid input!");
+            System.out.print("Invalid input!\n" +
+                    "Please enter a valid input\n" +
+                    "------------------------------------------------------\n" +
+                    "1. Add a new Electronic to the system\n" +
+                    "2. Return to main menu\n" +
+                    "Select an option: ");
+            int answer3 = scanner.nextInt();
+            if (answer3 == 1) {
+                addProduct(scanner);
+            } else if (answer3 == 2) {
+                menu();
+            } else {
+                System.out.println("Invalid input!");
+            }
+
         }
     }
 
@@ -116,7 +130,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
         System.out.print("------------------------------------------------------\n" +
                 "Enter product id: ");
         String productId = scanner.next();
-        for (Product product : this.productList) {
+        for (Product product : productList) {
             if (product.getProductId().equals(productId)) {
                 if (product instanceof Electronics) {
                     Electronics electronics = (Electronics) product;
@@ -125,7 +139,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     Clothing clothing = (Clothing) product;
                     System.out.println(clothing.toString());
                 }
-                this.productList.remove(product);
+                productList.remove(product);
                 System.out.println("\nProduct deleted successfully!");
                 int totalProducts = productList.size();
                 System.out.println("\nTotal number of products left in the System: " + totalProducts);
@@ -148,7 +162,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     @Override
     public void getProductList() {
         Collections.sort(productList);
-        for (Product product : this.productList) {
+        for (Product product : productList) {
             if (product instanceof Electronics) {
                 Electronics electronics = (Electronics) product;
                 System.out.println(electronics.toString());
@@ -167,7 +181,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
         File file = new File("Existing Products/saveProductList.txt");
         try(FileWriter fileWriter = new FileWriter(file, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            for (Product product : this.productList) {
+            for (Product product : productList) {
                 bufferedWriter.write(product.toString());
                 bufferedWriter.newLine();
             }

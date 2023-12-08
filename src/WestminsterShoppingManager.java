@@ -78,38 +78,47 @@ public class WestminsterShoppingManager implements ShoppingManager{
     public void addProduct(Scanner scanner) {
         if (productList.size() >= MAX_PRODUCT) {
             System.out.println("The product list is full!");
-            return;
+            menu();
         }
         System.out.print("------------------------------------------------------\n" +
                 "1. Add a new Electronic to the system\n" +
                 "2. Add a new Clothing to the system\n" +
                 "------------------------------------------------------\n" +
                 "Select an option: ");
+        variableErrorHandling(scanner, "nextInt", "Select an option: ");
         int answer = scanner.nextInt();
         if (answer == 1 || answer == 2) {
             System.out.print("------------------------------------------------------\n" +
                     "Enter product id: ");
+            variableErrorHandling(scanner, "next", "Enter product id: ");
             String productId = scanner.next();
-            System.out.print("Enter product name: ");
             scanner.nextLine();
+            System.out.print("Enter product name: ");
+            variableErrorHandling(scanner, "nextLine", "Enter product name: ");
             String productName = scanner.nextLine();
             System.out.print("Enter number of available items: ");
+            variableErrorHandling(scanner, "nextInt", "Enter number of available items: ");
             int numAvailableItems = scanner.nextInt();
             System.out.print("Enter product price: ");
+            variableErrorHandling(scanner, "nextDouble", "Enter product price: ");
             double productPrice = scanner.nextDouble();
             if (answer == 1) {
-                System.out.print("Enter product brand: ");
                 scanner.nextLine();
+                System.out.print("Enter product brand: ");
+                variableErrorHandling(scanner, "nextLine", "Enter product brand: ");
                 String productBrand = scanner.nextLine();
                 System.out.print("Enter product warranty: ");
+                variableErrorHandling(scanner, "nextInt", "Enter product warranty(months): ");
                 int productWarranty = scanner.nextInt();
                 Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
                 productList.add(electronic);
             } else {
                 System.out.print("Enter product size: ");
+                variableErrorHandling(scanner, "nextDouble", "Enter product size: ");
                 double productSize = scanner.nextDouble();
-                System.out.print("Enter product colour: ");
                 scanner.nextLine();
+                System.out.print("Enter product colour: ");
+                variableErrorHandling(scanner, "nextLine", "Enter product colour: ");
                 String productColour = scanner.nextLine();
                 Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
                 productList.add(clothing);
@@ -117,6 +126,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
             System.out.print("\nProduct added successfully!\n" +
                     "------------------------------------------------------\n" +
                     "Do you want to add another product? (Y/N): ");
+            variableErrorHandling(scanner, "next", "Do you want to add another product? (Y/N): ");
             String answer2 = scanner.next();
             String answer2Lower = answer2.toLowerCase();
             if (answer2Lower.equals("y")) {
@@ -124,10 +134,10 @@ public class WestminsterShoppingManager implements ShoppingManager{
             } else if (answer2Lower.equals("n")) {
                 menu();
             } else {
-                inputErrorHandling(scanner, "Add a new product to the system");
+                recursiveErrorHandling(scanner, "Add a new product to the system", null);
             }
         } else {
-            inputErrorHandling(scanner, "Add a new product to the system");
+            recursiveErrorHandling(scanner, "Add a new product to the system", null);
         }
     }
 
@@ -139,6 +149,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
         }
         System.out.print("------------------------------------------------------\n" +
                 "Enter product id: ");
+        variableErrorHandling(scanner, "next", "Enter product id: ");
         String productId = scanner.next();
         for (Product product : productList) {
             if (product.getProductId().equals(productId)) {
@@ -150,15 +161,18 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     System.out.println(clothing.toString());
                 }
                 productList.remove(product);
-                System.out.println("\nProduct deleted successfully!");
+                System.out.println("Product deleted successfully!");
                 int totalProducts = productList.size();
-                System.out.println("\nTotal number of products left in the System: " + totalProducts);
+                System.out.println("Total number of products left in the System: " + totalProducts);
             } else {
-                System.out.println("\nInvalid input!");
+//                System.out.println("Invalid input!");
+//                System.out.println("The product id does not exist in the system!");
+                recursiveErrorHandling(scanner, "Delete a product from the system", "The product id does not exist in the system!");
             }
         }
         System.out.print("------------------------------------------------------\n" +
                 "Do you want to delete another product? (Y/N): ");
+        variableErrorHandling(scanner, "next", "Do you want to delete another product? (Y/N): ");
         String answer2 = scanner.next();
         String answer2Lower = answer2.toLowerCase();
         if (answer2Lower.equals("y")) {
@@ -166,7 +180,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
         } else if (answer2Lower.equals("n")) {
             menu();
         } else {
-            inputErrorHandling(scanner, "Delete a product from the system");
+            recursiveErrorHandling(scanner, "Delete a product from the system", null);
         }
     }
     @Override
@@ -234,13 +248,17 @@ public class WestminsterShoppingManager implements ShoppingManager{
         }
     }
 
-    public void inputErrorHandling(Scanner scanner, String message) {
+    public void recursiveErrorHandling(Scanner scanner, String message, String additionalMessage) {
+        if (additionalMessage == null) {
+            additionalMessage = "Please enter a valid input";
+        }
         System.out.print("Invalid input!\n" +
-                "Please enter a valid input\n" +
+                additionalMessage + "\n" +
                 "------------------------------------------------------\n" +
                 "1. " + message + "\n" +
                 "2. Return to main menu\n" +
                 "Select an option: ");
+        variableErrorHandling(scanner, "nextInt", "Select an option: ");
         int answer3 = scanner.nextInt();
         if (answer3 == 1) {
             addProduct(scanner);
@@ -248,7 +266,56 @@ public class WestminsterShoppingManager implements ShoppingManager{
             menu();
         } else {
             System.out.println("Invalid input!");
-            inputErrorHandling(scanner, message);
+            recursiveErrorHandling(scanner, message, additionalMessage);
+        }
+    }
+
+    public void variableErrorHandling(Scanner scanner, String type, String message) {
+        switch (type) {
+            case "nextLine":
+                while (true) {
+                    if (scanner.hasNextLine()) {
+                        return;
+                    } else {
+                        System.out.println("Invalid input!");
+                        System.out.println("Please enter a valid input");
+                        scanner.nextLine();
+                        System.out.println(message);
+                    }
+                }
+            case "nextInt":
+                while (true) {
+                    if (scanner.hasNextInt()) {
+                        return;
+                    } else {
+                        System.out.println("Invalid input!");
+                        System.out.println("Please enter a valid input");
+                        scanner.next();
+                        System.out.println(message);
+                    }
+                }
+            case "nextDouble":
+                while (true) {
+                    if (scanner.hasNextDouble()) {
+                        return;
+                    } else {
+                        System.out.println("Invalid input!");
+                        System.out.println("Please enter a valid input");
+                        scanner.next();
+                        System.out.println(message);
+                    }
+                }
+            case "next":
+                while (true) {
+                    if (scanner.hasNext()) {
+                        return;
+                    } else {
+                        System.out.println("Invalid input!");
+                        System.out.println("Please enter a valid input");
+                        scanner.next();
+                        System.out.println(message);
+                    }
+                }
         }
     }
 }

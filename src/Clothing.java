@@ -43,7 +43,7 @@ public class Clothing extends Product {
     public String toString() {
         return "Clothing{" +
                 super.toString() +
-                ", clothingSize=" + clothingSize +
+                ", clothingSize='" + clothingSize + "'" +
                 ", clothingColour='" + clothingColour + "'" +
                 "}";
     }

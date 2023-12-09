@@ -19,7 +19,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
         productList = new ArrayList<>();
     }
     public void menu() {
-        System.out.print("------------------------------------------------------\n" +
+        System.out.println("------------------------------------------------------\n" +
                 "------------------------------------------------------\n" +
                 "Welcome!\n" +
                 "------------------------------------------------------\n" +
@@ -29,8 +29,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 "3. Print all the products in the system\n" +
                 "4. Save the list of products that have been added to the system\n" +
                 "5. Exit the program\n" +
-                "------------------------------------------------------\n" +
-                "Select an option: ");
+                "------------------------------------------------------");
         Scanner scanner = new Scanner(System.in);
         int menuAnswer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2, 3, 4, 5","==");
         switch (menuAnswer) {
@@ -64,10 +63,10 @@ public class WestminsterShoppingManager implements ShoppingManager{
             System.out.println("The product list is full!");
             menu();
         }
-        System.out.println("------------------------------------------------------" +
+        System.out.println("------------------------------------------------------\n" +
                 "1. Add a new Electronic to the system\n" +
                 "2. Add a new Clothing to the system\n" +
-                "------------------------------------------------------\n");
+                "------------------------------------------------------");
         int answer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2", "==");
         if (answer == 1 || answer == 2) {
             System.out.println("------------------------------------------------------");
@@ -83,15 +82,15 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
                 productList.add(electronic);
             } else {
-                String productSize = nextErrorHandling(scanner, "Enter product size: ", "S, M, L, XL","==");
+                String productSize = nextErrorHandling(scanner, "Enter product size: ", "S, M, L, XL","===");
                 scanner.nextLine();
                 String productColour = nextLineErrorHandling(scanner, "Enter product colour: ","3", ">=");
                 Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
                 productList.add(clothing);
             }
-            System.out.println("\nProduct added successfully!" +
-                    "------------------------------------------------------\n");
-            String answer2 = nextErrorHandling(scanner, "Do you want to add another product? (Y/N): ", "y, n", "==");
+            System.out.println("\nProduct added successfully!\n" +
+                    "------------------------------------------------------");
+            String answer2 = nextErrorHandling(scanner, "Do you want to add another product? (Y/N): ", "y, n", "===");
             String answer2Lower = answer2.toLowerCase();
             if (answer2Lower.equals("y")) {
                 addProduct(scanner);
@@ -133,7 +132,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
             }
         }
         System.out.println("------------------------------------------------------");
-        String answer2 = nextErrorHandling(scanner, "Do you want to delete another product? (Y/N): ", "y, n", "==");
+        String answer2 = nextErrorHandling(scanner, "Do you want to delete another product? (Y/N): ", "y, n", "===");
         String answer2Lower = answer2.toLowerCase();
         if (answer2Lower.equals("y")) {
             deleteProduct(scanner);
@@ -241,7 +240,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
 
     public int nextIntErrorHandling(Scanner scanner, String message, String condition, String operator) {
         while (true) {
-            System.out.println(message);
+            System.out.print(message);
             if (scanner.hasNextInt()) {
                 int value = scanner.nextInt();
                 if (condition == null) {
@@ -273,7 +272,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
 
     public String nextLineErrorHandling(Scanner scanner, String message, String condition, String operator) {
         while (true) {
-            System.out.println(message);
+            System.out.print(message);
             if (scanner.hasNextLine()) {
                 String value = scanner.nextLine();
                 if (condition == null) {
@@ -297,7 +296,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
 
     public String nextErrorHandling(Scanner scanner, String message, String condition, String operator) {
         while (true) {
-            System.out.println(message);
+            System.out.print(message);
             if (scanner.hasNext()) {
                 String value = scanner.next();
                 if (condition == null) {
@@ -307,6 +306,11 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     for (String parameter : newCondition) {
                         if (operator.equals("==")) {
                             if (value.length() == Integer.parseInt(parameter)) {
+                                return value;
+                            }
+                        }
+                        else {
+                            if (value.equals(parameter)) {
                                 return value;
                             }
                         }
@@ -321,7 +325,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
 
     public double nextDoubleErrorHandling(Scanner scanner, String message, String condition, String operator) {
         while (true) {
-            System.out.println(message);
+            System.out.print(message);
             if (scanner.hasNextDouble()) {
                 double value = scanner.nextDouble();
                 if (condition == null) {
@@ -329,8 +333,10 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 } else {
                     String[] newCondition = condition.split(",");
                     for (String parameter : newCondition) {
-                        if (value == Double.parseDouble(parameter)) {
-                            return value;
+                        if (operator.equals(">")) {
+                            if (value > Double.parseDouble(parameter)) {
+                                return value;
+                            }
                         }
                     }
                 }

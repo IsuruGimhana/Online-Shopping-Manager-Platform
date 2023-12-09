@@ -5,7 +5,7 @@
  */
 public class Clothing extends Product {
     // instance variables
-    private double clothingSize; // the size of the clothing
+    private String clothingSize; // the size of the clothing
     private  String clothingColour; // the colour of the clothing
 
     /**
@@ -17,7 +17,7 @@ public class Clothing extends Product {
      * @param clothingSize - the size of the clothing
      * @param clothingColour - the colour of the clothing
      */
-    public Clothing(String productId, String productName, int numAvailableItems, double productPrice, double clothingSize, String clothingColour) {
+    public Clothing(String productId, String productName, int numAvailableItems, double productPrice, String clothingSize, String clothingColour) {
         super(productId, productName, numAvailableItems, productPrice);
         this.clothingSize = clothingSize;
         this.clothingColour = clothingColour;
@@ -26,13 +26,13 @@ public class Clothing extends Product {
     /**
      * getters and setters
      */
-    public double getClothingSize() {
+    public String getClothingSize() {
         return clothingSize;
     }
     public String getClothingColour() {
         return clothingColour;
     }
-    public void setClothingSize(double clothingSize) {
+    public void setClothingSize(String clothingSize) {
         this.clothingSize = clothingSize;
     }
     public void setClothingColour(String clothingColour) {

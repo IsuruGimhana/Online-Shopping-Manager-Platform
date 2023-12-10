@@ -69,55 +69,52 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 "2. Add a new Clothing to the system\n" +
                 "------------------------------------------------------");
         int answer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2", "==");
-        if (answer == 1 || answer == 2) {
-            System.out.println("------------------------------------------------------");
-            String productId = nextErrorHandling(scanner, "Enter product id (format: XXXX): ", "4", "==");
+        System.out.println("------------------------------------------------------");
+        String productId;
+        if (answer == 1) {
+            productId = nextErrorHandling(scanner, "Enter product id (format: E001): ", "4", "E==");
+        } else {
+            productId = nextErrorHandling(scanner, "Enter product id (format: C001): ", "4", "C==");
+        }
 //            scanner.nextLine();
-            for (Product product : productList) {
-                if (product.getProductId().equals(productId)) {
-                    System.out.println("\nProduct already exists!\n" +
-                            "------------------------------------------------------");
-                    String answer2 = nextErrorHandling(scanner, "Do you want to add a new product? (Y/N): ", "y, n", "===");
-                    String answer2Lower = answer2.toLowerCase();
-                    if (answer2Lower.equals("y")) {
-                        addProduct(scanner);
-                    } else {
-                        menu();
-                    }
+        for (Product product : productList) {
+            if (product.getProductId().equals(productId)) {
+                System.out.println("\nProduct already exists!\n" +
+                        "------------------------------------------------------");
+                String answer2 = nextErrorHandling(scanner, "Do you want to add a new product? (Y/N): ", "Y, N", "===");
+                String answer2Lower = answer2.toLowerCase();
+                if (answer2Lower.equals("y")) {
+                    addProduct(scanner);
+                } else {
+                    menu();
                 }
             }
-            String productName = nextLineErrorHandling(scanner, "Enter product name: ", "3", ">=");
-            int numAvailableItems = nextIntErrorHandling(scanner, "Enter number of available items: ", "0",">");
-            double productPrice = nextDoubleErrorHandling(scanner, "Enter product price: ", "0",">");
-            if (answer == 1) {
-//                scanner.nextLine();
-                String productBrand = nextLineErrorHandling(scanner, "Enter product brand: ", "3", ">=");
-                int productWarranty = nextIntErrorHandling(scanner, "Enter product warranty(months): ", "0",">=");
-                Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
-                productList.add(electronic);
-            } else {
-                String productSize = nextErrorHandling(scanner, "Enter product size: ", "S, M, L, XL","===");
-//                scanner.nextLine();
-                String productColour = nextLineErrorHandling(scanner, "Enter product colour: ","3", ">=");
-                Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
-                productList.add(clothing);
-            }
-            System.out.println("\nProduct added successfully!\n" +
-                    "------------------------------------------------------");
-            String answer2 = nextErrorHandling(scanner, "Do you want to add another product? (Y/N): ", "y, n", "===");
-            String answer2Lower = answer2.toLowerCase();
-            if (answer2Lower.equals("y")) {
-                addProduct(scanner);
-            } else {
-                menu();
-            }
-//            else {
-//                variableErrorHandling(scanner, "next", "Do you want to add another product? (Y/N): ");
-//            }
         }
-//        else {
-//            variableErrorHandling(scanner, "nextInt", "Select an option: ");
-//        }
+        String productName = nextLineErrorHandling(scanner, "Enter product name: ", "3", ">=");
+        int numAvailableItems = nextIntErrorHandling(scanner, "Enter number of available items: ", "0",">");
+        double productPrice = nextDoubleErrorHandling(scanner, "Enter product price: ", "0",">");
+        if (answer == 1) {
+//                scanner.nextLine();
+            String productBrand = nextLineErrorHandling(scanner, "Enter product brand: ", "3", ">=");
+            int productWarranty = nextIntErrorHandling(scanner, "Enter product warranty(months): ", "0",">=");
+            Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
+            productList.add(electronic);
+        } else {
+            String productSize = nextErrorHandling(scanner, "Enter product size: ", "S, M, L, XL","===");
+//                scanner.nextLine();
+            String productColour = nextLineErrorHandling(scanner, "Enter product colour: ","3", ">=");
+            Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
+            productList.add(clothing);
+        }
+        System.out.println("\nProduct added successfully!\n" +
+                "------------------------------------------------------");
+        String answer2 = nextErrorHandling(scanner, "Do you want to add another product? (Y/N): ", "Y, N", "===");
+        String answer2Lower = answer2.toLowerCase();
+        if (answer2Lower.equals("y")) {
+            addProduct(scanner);
+        } else {
+            menu();
+        }
     }
 
     @Override
@@ -127,8 +124,18 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     "The product list is empty!");
             menu();
         }
+        System.out.println("------------------------------------------------------\n" +
+                "1. Delete an Electronic product from the system\n" +
+                "2. Delete a Clothing product from the system\n" +
+                "------------------------------------------------------");
+        int answer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2", "==");
         System.out.println("------------------------------------------------------");
-        String productId = nextErrorHandling(scanner, "Enter product id (format: XXXX): ", "4", "==");
+        String productId;
+        if (answer == 1 ) {
+            productId = nextErrorHandling(scanner, "Enter product id (format: E001): ", "4", "E==");
+        } else {
+            productId = nextErrorHandling(scanner, "Enter product id (format: C001): ", "4", "C==");
+        }
         Iterator<Product> iterator = productList.iterator();
         while (iterator.hasNext()) {
             Product product = iterator.next();
@@ -154,7 +161,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
 //        for (Product product : productList) {
 //        }
         System.out.println("------------------------------------------------------");
-        String answer2 = nextErrorHandling(scanner, "Do you want to delete another product? (Y/N): ", "y, n", "===");
+        String answer2 = nextErrorHandling(scanner, "Do you want to delete another product? (Y/N): ", "Y, N", "===");
         String answer2Lower = answer2.toLowerCase();
         if (answer2Lower.equals("y")) {
             deleteProduct(scanner);
@@ -336,14 +343,14 @@ public class WestminsterShoppingManager implements ShoppingManager{
 //                    newCondition[i] = newCondition[i].trim();
 //                }
                 for (String parameter : newCondition) {
-                    if (operator.equals("==")) {
-                        if (value.length() == Integer.parseInt(parameter)) {
+                    if (operator.equals("E==") || operator.equals("C==")) {
+                        if ((value.length() == Integer.parseInt(parameter)) && (value.substring(0,1).toUpperCase().equals(operator.substring(0,1)))) {
                             scanner.nextLine();
-                            return value;
+                            return value.toUpperCase();
                         }
                     }
                     else {
-                        if (value.equals(parameter)) {
+                        if (value.toUpperCase().equals(parameter)) {
                             scanner.nextLine();
                             return value;
                         }

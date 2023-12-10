@@ -59,6 +59,15 @@ public abstract class Product implements Comparable<Product> {
                 ", productPrice=" + productPrice;
     }
     public int compareTo(Product product) {
-        return this.productId.compareTo(product.getProductId());
+        // compare  the product id's alphabetically first
+        int comparedStringValue = this.productId.compareToIgnoreCase(product.getProductId());
+        // if the product id's are not the same, return the comparison
+        if (comparedStringValue != 0) {
+            return comparedStringValue;
+        }
+        // if the product id's are the same, compare the product id's numerically
+        int comparedThisIntValue = Integer.parseInt(this.productId.substring(1));
+        int comparedProductIntValue = Integer.parseInt(product.getProductId().substring(1));
+        return comparedThisIntValue - comparedProductIntValue;
     }
 }

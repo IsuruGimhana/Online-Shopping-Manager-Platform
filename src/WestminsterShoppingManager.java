@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -70,20 +71,33 @@ public class WestminsterShoppingManager implements ShoppingManager{
         int answer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2", "==");
         if (answer == 1 || answer == 2) {
             System.out.println("------------------------------------------------------");
-            String productId = nextErrorHandling(scanner, "Enter product id (format: XXX): ", "3", "==");
-            scanner.nextLine();
+            String productId = nextErrorHandling(scanner, "Enter product id (format: XXXX): ", "4", "==");
+//            scanner.nextLine();
+            for (Product product : productList) {
+                if (product.getProductId().equals(productId)) {
+                    System.out.println("\nProduct already exists!\n" +
+                            "------------------------------------------------------");
+                    String answer2 = nextErrorHandling(scanner, "Do you want to add a new product? (Y/N): ", "y, n", "===");
+                    String answer2Lower = answer2.toLowerCase();
+                    if (answer2Lower.equals("y")) {
+                        addProduct(scanner);
+                    } else {
+                        menu();
+                    }
+                }
+            }
             String productName = nextLineErrorHandling(scanner, "Enter product name: ", "3", ">=");
             int numAvailableItems = nextIntErrorHandling(scanner, "Enter number of available items: ", "0",">");
             double productPrice = nextDoubleErrorHandling(scanner, "Enter product price: ", "0",">");
             if (answer == 1) {
-                scanner.nextLine();
+//                scanner.nextLine();
                 String productBrand = nextLineErrorHandling(scanner, "Enter product brand: ", "3", ">=");
                 int productWarranty = nextIntErrorHandling(scanner, "Enter product warranty(months): ", "0",">=");
                 Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
                 productList.add(electronic);
             } else {
                 String productSize = nextErrorHandling(scanner, "Enter product size: ", "S, M, L, XL","===");
-                scanner.nextLine();
+//                scanner.nextLine();
                 String productColour = nextLineErrorHandling(scanner, "Enter product colour: ","3", ">=");
                 Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
                 productList.add(clothing);
@@ -109,13 +123,17 @@ public class WestminsterShoppingManager implements ShoppingManager{
     @Override
     public void deleteProduct(Scanner scanner) {
         if (productList.size() == 0) {
-            System.out.println("The product list is empty!");
+            System.out.println("\n" +
+                    "The product list is empty!");
             menu();
         }
         System.out.println("------------------------------------------------------");
-        String productId = nextErrorHandling(scanner, "Enter product id (format: XXX): ", "3", "==");
-        for (Product product : productList) {
+        String productId = nextErrorHandling(scanner, "Enter product id (format: XXXX): ", "4", "==");
+        Iterator<Product> iterator = productList.iterator();
+        while (iterator.hasNext()) {
+            Product product = iterator.next();
             if (product.getProductId().equals(productId)) {
+//                System.out.println(product);
                 if (product instanceof Electronics) {
                     Electronics electronics = (Electronics) product;
                     System.out.println(electronics.toString());
@@ -127,10 +145,14 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 System.out.println("\nProduct deleted successfully!");
                 int totalProducts = productList.size();
                 System.out.println("Total number of products left in the System: " + totalProducts);
+                break;
             } else {
-                System.out.println("Product not found!");
+                System.out.println("\n" +
+                        "Product not found!");
             }
         }
+//        for (Product product : productList) {
+//        }
         System.out.println("------------------------------------------------------");
         String answer2 = nextErrorHandling(scanner, "Do you want to delete another product? (Y/N): ", "y, n", "===");
         String answer2Lower = answer2.toLowerCase();
@@ -191,7 +213,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.startsWith("Electronics")) {
-                    String[] savedList = line.substring(12, line.length()-1).split(",");
+                    String[] savedList = line.substring(12, line.length()-1).split(", ");
                     String productId = savedList[0].substring(11, savedList[0].length()-1);
                     String productName = savedList[1].substring(13, savedList[1].length()-1);
                     int numAvailableItems = Integer.parseInt(savedList[2].substring(18));
@@ -200,7 +222,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     int productWarranty = Integer.parseInt(savedList[5].substring(25));
                     Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
                 } else {
-                    String[] savedList = line.substring(9, line.length()-1).split(",");
+                    String[] savedList = line.substring(9, line.length()-1).split(", ");
                     String productId = savedList[0].substring(11, savedList[0].length()-1);
                     String productName = savedList[1].substring(13, savedList[1].length()-1);
                     int numAvailableItems = Integer.parseInt(savedList[2].substring(18));
@@ -243,30 +265,37 @@ public class WestminsterShoppingManager implements ShoppingManager{
             System.out.print(message);
             if (scanner.hasNextInt()) {
                 int value = scanner.nextInt();
-                if (condition == null) {
-                    return value;
-                } else {
-                    String[] newCondition = condition.split(",");
-                    for (String parameter : newCondition) {
-                        if (operator.equals("==")) {
-                            if (value == Integer.parseInt(parameter)) {
-                                return value;
-                            }
-                        } else if (operator.equals(">")) {
-                            if (value > Integer.parseInt(parameter)) {
-                                return value;
-                            }
-                        } else {
-                            if (value >= Integer.parseInt(parameter)) {
-                                return value;
-                            }
+                String[] newCondition = condition.split(", ");
+//                for (int i = 0; i < newCondition.length; i++) {
+//                    newCondition[i] = newCondition[i].trim();
+//                }
+                for (String parameter : newCondition) {
+                    if (operator.equals("==")) {
+                        if (value == Integer.parseInt(parameter)) {
+                            scanner.nextLine();
+                            return value;
+                        }
+                    } else if (operator.equals(">")) {
+                        if (value > Integer.parseInt(parameter)) {
+                            scanner.nextLine();
+                            return value;
+                        }
+                    } else {
+                        if (value >= Integer.parseInt(parameter)) {
+                            scanner.nextLine();
+                            return value;
                         }
                     }
                 }
             }
-            System.out.println("Invalid input!");
-            System.out.println("Please enter a valid input");
-            scanner.next();
+            scanner.nextLine();
+            System.out.println("\n" +
+                    "Invalid input!\n" +
+                    "Please enter a valid input\n" +
+                    "------------------------------------------------------");
+//            System.out.println("Please enter a valid input");
+//            System.out.println("------------------------------------------------------");
+//            scanner.next();
         }
     }
 
@@ -275,22 +304,25 @@ public class WestminsterShoppingManager implements ShoppingManager{
             System.out.print(message);
             if (scanner.hasNextLine()) {
                 String value = scanner.nextLine();
-                if (condition == null) {
-                    return value;
-                } else {
-                    String[] newCondition = condition.split(",");
-                    for (String parameter : newCondition) {
-                        if (operator.equals(">=")) {
-                            if (value.length() >= Integer.parseInt(parameter)) {
-                                return value;
-                            }
+                String[] newCondition = condition.split(", ");
+//                for (int i = 0; i < newCondition.length; i++) {
+//                    newCondition[i] = newCondition[i].trim();
+//                }
+                for (String parameter : newCondition) {
+                    if (operator.equals(">=")) {
+                        if (value.length() >= Integer.parseInt(parameter)) {
+//                            scanner.nextLine();
+                            return value;
                         }
                     }
                 }
             }
-            System.out.println("Invalid input!");
-            System.out.println("Please enter a valid input");
-            scanner.nextLine();
+//            scanner.nextLine();
+            System.out.println("\n" +
+                    "Invalid input!\n" +
+                    "Please enter a valid input\n" +
+                    "------------------------------------------------------");
+//            scanner.nextLine();
         }
     }
 
@@ -299,27 +331,31 @@ public class WestminsterShoppingManager implements ShoppingManager{
             System.out.print(message);
             if (scanner.hasNext()) {
                 String value = scanner.next();
-                if (condition == null) {
-                    return value;
-                } else {
-                    String[] newCondition = condition.split(",");
-                    for (String parameter : newCondition) {
-                        if (operator.equals("==")) {
-                            if (value.length() == Integer.parseInt(parameter)) {
-                                return value;
-                            }
+                String[] newCondition = condition.split(", ");
+//                for (int i = 0; i < newCondition.length; i++) {
+//                    newCondition[i] = newCondition[i].trim();
+//                }
+                for (String parameter : newCondition) {
+                    if (operator.equals("==")) {
+                        if (value.length() == Integer.parseInt(parameter)) {
+                            scanner.nextLine();
+                            return value;
                         }
-                        else {
-                            if (value.equals(parameter)) {
-                                return value;
-                            }
+                    }
+                    else {
+                        if (value.equals(parameter)) {
+                            scanner.nextLine();
+                            return value;
                         }
                     }
                 }
             }
-            System.out.println("Invalid input!");
-            System.out.println("Please enter a valid input");
-            scanner.next();
+            scanner.nextLine();
+            System.out.println("\n" +
+                    "Invalid input!\n" +
+                    "Please enter a valid input\n" +
+                    "------------------------------------------------------");
+//            scanner.next();
         }
     }
 
@@ -328,22 +364,24 @@ public class WestminsterShoppingManager implements ShoppingManager{
             System.out.print(message);
             if (scanner.hasNextDouble()) {
                 double value = scanner.nextDouble();
-                if (condition == null) {
-                    return value;
-                } else {
-                    String[] newCondition = condition.split(",");
-                    for (String parameter : newCondition) {
-                        if (operator.equals(">")) {
-                            if (value > Double.parseDouble(parameter)) {
-                                return value;
-                            }
+                String[] newCondition = condition.split(", ");
+//                for (int i = 0; i < newCondition.length; i++) {
+//                    newCondition[i] = newCondition[i].trim();
+//                }
+                for (String parameter : newCondition) {
+                    if (operator.equals(">")) {
+                        if (value > Double.parseDouble(parameter)) {
+                            scanner.nextLine();
+                            return value;
                         }
                     }
                 }
             }
-            System.out.println("Invalid input!");
-            System.out.println("Please enter a valid input");
-            scanner.next();
+            scanner.nextLine();
+            System.out.println("\n" +
+                    "Invalid input!\n" +
+                    "Please enter a valid input\n" +
+                    "------------------------------------------------------");
         }
     }
 //    public int variableErrorHandling(Scanner scanner, String type, String message, String condition) {

@@ -294,45 +294,100 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
 //        String newFile = scanner.next();
 //        File file = new File("Existing Products/" + newFile + ".txt");
         File file = new File("Existing Products/saveProductList.txt");
-        String productId = "";
-        boolean productExists = false;
-        if (file.exists()) {
+        try(FileWriter fileWriter = new FileWriter(file, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             try(Scanner scanner = new Scanner(file)) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    if (line.startsWith("Electronics")) {
-                        String[] savedList = line.substring(12, line.length()-1).split(", ");
-                        productId = line.substring(12, line.length()-1);
-                    } else {
-                        String[] savedList = line.substring(9, line.length()-1).split(", ");
-                        productId = savedList[0].substring(11, savedList[0].length()-1);
-                    }
-                    for (Product product : productList) {
+                for (Product product : productList) {
+                    String productId = "";
+                    boolean productExists = false;
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        if (line.startsWith("Electronics")) {
+                            String[] savedList = line.substring(12, line.length() - 1).split(", ");
+                            productId = line.substring(12, line.length() - 1);
+                        } else {
+                            String[] savedList = line.substring(9, line.length() - 1).split(", ");
+                            productId = savedList[0].substring(11, savedList[0].length() - 1);
+                        }
                         if (product.getProductId().equals(productId)) {
-                            productList.remove(product);
                             productExists = true;
                         }
                     }
-                    if (!productExists) {
-                        try(FileWriter fileWriter = new FileWriter(file, true);
-                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-                            for (Product product : productList) {
-                                if (!product.getProductId().equals(productId)) {
-                                    bufferedWriter.write(product.toString());
-                                    bufferedWriter.newLine();
-                                }
-                            }
-                            System.out.println("\nProduct List saved successfully!");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    if (productExists == false) {
+                        bufferedWriter.write(product.toString());
+                        bufferedWriter.newLine();
                     }
                 }
+//                while (true){
+//                    if(scanner.hasNextLine()) {
+//                        String line = scanner.nextLine();
+//                        if (line.startsWith("Electronics")) {
+//                            String[] savedList = line.substring(12, line.length() - 1).split(", ");
+//                            productId = line.substring(12, line.length() - 1);
+//                        } else {
+//                            String[] savedList = line.substring(9, line.length() - 1).split(", ");
+//                            productId = savedList[0].substring(11, savedList[0].length() - 1);
+//                        }
+//                        for (Product product : productList) {
+//                            if (product.getProductId().equals(productId)) {
+//                                productExists = true;
+//                            }
+//                        }
+//                        if (productExists == false) {
+//                            bufferedWriter.write(saveProduct.toString());
+//                            bufferedWriter.newLine();
+//                        }
+//                    } else {
+//                        for (Product product : productList) {
+//                            bufferedWriter.write(product.toString());
+//                            bufferedWriter.newLine();
+//                        }
+//                    }
+//                    menu();
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        menu();
+//        String productId = "";
+//        boolean productExists = true;
+//        if (file.exists()) {
+//            try(Scanner scanner = new Scanner(file)) {
+//                while (scanner.hasNextLine()) {
+//                    String line = scanner.nextLine();
+//                    if (line.startsWith("Electronics")) {
+//                        String[] savedList = line.substring(12, line.length()-1).split(", ");
+//                        productId = line.substring(12, line.length()-1);
+//                    } else {
+//                        String[] savedList = line.substring(9, line.length()-1).split(", ");
+//                        productId = savedList[0].substring(11, savedList[0].length()-1);
+//                    }
+//                    for (Product product : productList) {
+//                        if (product.getProductId().equals(productId)) {
+//                            productList.remove(product);
+//                            productExists = true;
+//                        }
+//                    }
+//                    if (!productExists) {
+//                        try(FileWriter fileWriter = new FileWriter(file, true);
+//                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+//                            for (Product product : productList) {
+//                                if (!product.getProductId().equals(productId)) {
+//                                    bufferedWriter.write(product.toString());
+//                                    bufferedWriter.newLine();
+//                                }
+//                            }
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    System.out.println("\nProduct List saved successfully!");
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        menu();
     }
 
     public void loadProductList() {

@@ -5,5 +5,5 @@ public interface ShoppingManager {
     public abstract void addProduct(Scanner scanner);
     public abstract void deleteProduct(Scanner scanner);
     public abstract void getProductList();
-    public abstract void saveProductList(Scanner scanner) throws IOException;
+    public abstract void saveProductList() throws IOException;
 }

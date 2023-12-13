@@ -15,11 +15,7 @@ import java.util.Scanner;
 public class WestminsterShoppingManager implements ShoppingManager{
     private static final ArrayList<Product> PRODUCT_LIST = new ArrayList<>();//product list cannot be modified but it will be accessible for all the instances of this class
     private static final int MAX_PRODUCT = 50;//maximum number of products that can be added to the system
-//    JPanel headerPanel;
-//    JPanel bodyPanel;
-//    JPanel footerPanel;
-//    JPanel sortPanel;
-//    JButton shoppingCart;
+
     public WestminsterShoppingManager() {}
 
     public static ArrayList<Product> getProductList() {
@@ -32,106 +28,16 @@ public class WestminsterShoppingManager implements ShoppingManager{
         westminsterShoppingManager.loadProductList();
         System.out.println("1. GUI\n" +
                 "2. Manager Console");
-//        Scanner scanner = new Scanner(System.in);
         int menuType = westminsterShoppingManager.nextIntErrorHandling("Select an option: ", "1, 2", "==");
         if (menuType == 1) {
             WestminsterShoppingCentre frame = new WestminsterShoppingCentre();
-//            frame.setTitle("Westminster Shopping Centre");
-//            frame.setSize(600,400);
             frame.setVisible(true);
-//            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         } else {
             westminsterShoppingManager.menu();
         }
     }
 
-//    public  WestminsterShoppingManager(String title) throws HeadlessException {
-//        super(title);
-//        headerPanel = new JPanel();
-//        bodyPanel = new JPanel();
-//        footerPanel = new JPanel();
-//        sortPanel = new JPanel();
-//
-//        this.getContentPane().setLayout(new BorderLayout());
-//        this.getContentPane().add(headerPanel, BorderLayout.NORTH);
-//        this.getContentPane().add(bodyPanel, BorderLayout.CENTER);
-//        this.getContentPane().add(footerPanel, BorderLayout.SOUTH);
-//        headerPanel.setLayout(new BorderLayout());
-////        panel2.setLayout(new BorderLayout());
-////        panel3.setLayout(new BorderLayout());
-//        headerPanel.setBackground(Color.BLACK);
-//        bodyPanel.setBackground(Color.GRAY);
-//        footerPanel.setBackground(Color.darkGray);
-//        sortPanel.setBackground(Color.pink);
-//
-//        shoppingCart = new JButton("Shopping Cart");
-////        shoppingCart.setMinimumSize(new Dimension(150, 10));
-////        Dimension size = shoppingCart.getMinimumSize();
-////        int height = (int) size.getHeight();
-////        System.out.println("height "+height);
-////        shoppingCart.setBorder(new EmptyBorder(5,5,5,5));
-//        headerPanel.add(sortPanel, BorderLayout.WEST);
-//        headerPanel.add(shoppingCart, BorderLayout.EAST);
-//
-//        sortPanel.setLayout(new BorderLayout(5,5));
-//        sortPanel.setBorder(BorderFactory.createEmptyBorder(2,15,2,5));
-//        JPanel sortTypePanel = new JPanel();
-//        JPanel sortValue = new JPanel();
-//        sortPanel.add(sortTypePanel, BorderLayout.WEST);
-//        sortPanel.add(sortValue, BorderLayout.EAST);
-//        sortTypePanel.setLayout(new GridLayout(2,1));
-//        sortValue.setLayout(new GridLayout(2,1));
-//
-//        JLabel category = new JLabel("Category");
-//        sortTypePanel.add(category);
-//        String[] productCategory = {"All", "Electronics", "Clothing"};
-//        JComboBox categoryDropDown = new JComboBox(productCategory);
-//        categoryDropDown.setBorder(new EmptyBorder(5,0,0,0));
-//        sortValue.add(categoryDropDown);
-//        JLabel sort = new JLabel("Sort");
-//        sortTypePanel.add(sort);
-//        JCheckBox ascendingOrder = new JCheckBox("a-z");
-//        sortValue.add(ascendingOrder);
-//
-//        //table
-//        String[] columnNames = {"Product ID", "Name", "Category", "Price", "Info"};
-//        Object[][] tableData = new Object[productList.size()][5];
-//        for (int i = 0; i < productList.size(); i++) {
-//            Product product = productList.get(i);
-//            tableData[i][0] = product.getProductId();
-//            tableData[i][1] = product.getProductName();
-//            String info = "";
-//            if (product instanceof Electronics) {
-//                tableData[i][2] = "Electronics";
-//                Electronics electronics = (Electronics) product;
-//                info = electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty";
-//            } else {
-//                tableData[i][2] = "Clothing";
-//                Clothing clothing = (Clothing) product;
-//                info = clothing.getClothingSize() + ", " + clothing.getClothingColour();
-//            }
-//            tableData[i][3] = product.getProductPrice();
-//            tableData[i][4] = info;
-//        }
-//        TableModel tableModel = new DefaultTableModel(tableData, columnNames);
-//        JTable table = new JTable(tableModel);
-//        JScrollPane tableScrollPane = new JScrollPane(table);
-//        bodyPanel.add(tableScrollPane);
-//    }
-
     public void menu() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("1. GUI\n" +
-//                "2. Manager Console");
-//        int menuType = nextIntErrorHandling("Select an option: ", "1, 2", "==");
-//        if (menuType == 1) {
-//            WestminsterShoppingManager frame = new WestminsterShoppingManager("Westminster Shopping Centre");
-////            frame.setTitle("Westminster Shopping Centre");
-//            frame.setSize(600,400);
-//            frame.setVisible(true);
-//            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        }
-//        else {
         System.out.println("------------------------------------------------------\n" +
                 "------------------------------------------------------\n" +
                 "Welcome!\n" +
@@ -306,104 +212,22 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
     @Override
     public void saveProductList() throws IOException {
-//        System.out.println("Enter file name: ");
-//        String newFile = scanner.next();
-//        File file = new File("Existing Products/" + newFile + ".txt");
         File file = new File("Existing Products/saveProductList.txt");
+        if (file.exists()) {
+            file.delete();
+        }
+        System.out.println(PRODUCT_LIST.size());
         try(FileWriter fileWriter = new FileWriter(file, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            try(Scanner scanner = new Scanner(file)) {
                 for (Product product : PRODUCT_LIST) {
-                    String productId = "";
-                    boolean productExists = false;
-                    while (scanner.hasNextLine()) {
-                        String line = scanner.nextLine();
-                        if (line.startsWith("Electronics")) {
-                            String[] savedList = line.substring(12, line.length() - 1).split(", ");
-                            productId = line.substring(12, line.length() - 1);
-                        } else {
-                            String[] savedList = line.substring(9, line.length() - 1).split(", ");
-                            productId = savedList[0].substring(11, savedList[0].length() - 1);
-                        }
-                        if (product.getProductId().equals(productId)) {
-                            productExists = true;
-                        }
+                    bufferedWriter.write(product.toString());
+                    bufferedWriter.newLine();
                     }
-                    if (productExists == false) {
-                        bufferedWriter.write(product.toString());
-                        bufferedWriter.newLine();
-                    }
-                }
-//                while (true){
-//                    if(scanner.hasNextLine()) {
-//                        String line = scanner.nextLine();
-//                        if (line.startsWith("Electronics")) {
-//                            String[] savedList = line.substring(12, line.length() - 1).split(", ");
-//                            productId = line.substring(12, line.length() - 1);
-//                        } else {
-//                            String[] savedList = line.substring(9, line.length() - 1).split(", ");
-//                            productId = savedList[0].substring(11, savedList[0].length() - 1);
-//                        }
-//                        for (Product product : productList) {
-//                            if (product.getProductId().equals(productId)) {
-//                                productExists = true;
-//                            }
-//                        }
-//                        if (productExists == false) {
-//                            bufferedWriter.write(saveProduct.toString());
-//                            bufferedWriter.newLine();
-//                        }
-//                    } else {
-//                        for (Product product : productList) {
-//                            bufferedWriter.write(product.toString());
-//                            bufferedWriter.newLine();
-//                        }
-//                    }
-//                    menu();
-//                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-//        String productId = "";
-//        boolean productExists = true;
-//        if (file.exists()) {
-//            try(Scanner scanner = new Scanner(file)) {
-//                while (scanner.hasNextLine()) {
-//                    String line = scanner.nextLine();
-//                    if (line.startsWith("Electronics")) {
-//                        String[] savedList = line.substring(12, line.length()-1).split(", ");
-//                        productId = line.substring(12, line.length()-1);
-//                    } else {
-//                        String[] savedList = line.substring(9, line.length()-1).split(", ");
-//                        productId = savedList[0].substring(11, savedList[0].length()-1);
-//                    }
-//                    for (Product product : productList) {
-//                        if (product.getProductId().equals(productId)) {
-//                            productList.remove(product);
-//                            productExists = true;
-//                        }
-//                    }
-//                    if (!productExists) {
-//                        try(FileWriter fileWriter = new FileWriter(file, true);
-//                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-//                            for (Product product : productList) {
-//                                if (!product.getProductId().equals(productId)) {
-//                                    bufferedWriter.write(product.toString());
-//                                    bufferedWriter.newLine();
-//                                }
-//                            }
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    System.out.println("\nProduct List saved successfully!");
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        menu();
+        System.out.println("\nProduct List saved successfully!");
+        menu();
     }
 
     public void loadProductList() {
@@ -438,32 +262,11 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 }
 //                return;
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-//    public void recursiveErrorHandling(Scanner scanner, String message, String additionalMessage) {
-//        if (additionalMessage == null) {
-//            additionalMessage = "Please enter a valid input";
-//        }
-//        System.out.print("Invalid input!\n" +
-//                additionalMessage + "\n" +
-//                "------------------------------------------------------\n" +
-//                "1. " + message + "\n" +
-//                "2. Return to main menu\n" +
-//                "Select an option: ");
-//        variableErrorHandling(scanner, "nextInt", "Select an option: ");
-//        int answer3 = scanner.nextInt();
-//        if (answer3 == 1) {
-//            addProduct(scanner);
-//        } else if (answer3 == 2) {
-//            menu();
-//        } else {
-//            System.out.println("Invalid input!");
-//            recursiveErrorHandling(scanner, message, additionalMessage);
-//        }
-//    }
 
     public int nextIntErrorHandling(String message, String condition, String operator) {
         Scanner scanner = new Scanner(System.in);

@@ -29,6 +29,25 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
         productList = new ArrayList<>();
     }
 
+    // main method
+    public static void main(String[] args) {
+        WestminsterShoppingManager westminsterShoppingManager = new WestminsterShoppingManager();
+        westminsterShoppingManager.loadProductList();
+        System.out.println("1. GUI\n" +
+                "2. Manager Console");
+//        Scanner scanner = new Scanner(System.in);
+        int menuType = westminsterShoppingManager.nextIntErrorHandling("Select an option: ", "1, 2", "==");
+        if (menuType == 1) {
+            WestminsterShoppingManager frame = new WestminsterShoppingManager("Westminster Shopping Centre");
+//            frame.setTitle("Westminster Shopping Centre");
+            frame.setSize(600,400);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        } else {
+            westminsterShoppingManager.menu();
+        }
+    }
+
     public  WestminsterShoppingManager(String title) throws HeadlessException {
         super(title);
         headerPanel = new JPanel();
@@ -108,7 +127,7 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
         Scanner scanner = new Scanner(System.in);
         System.out.println("1. GUI\n" +
                 "2. Manager Console");
-        int menuType = nextIntErrorHandling(scanner, "Select an option: ", "1, 2", "==");
+        int menuType = nextIntErrorHandling("Select an option: ", "1, 2", "==");
         if (menuType == 1) {
             WestminsterShoppingManager frame = new WestminsterShoppingManager("Westminster Shopping Centre");
 //            frame.setTitle("Westminster Shopping Centre");
@@ -128,13 +147,13 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
                     "4. Save the list of products that have been added to the system\n" +
                     "5. Exit the program\n" +
                     "------------------------------------------------------");
-            int menuAnswer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2, 3, 4, 5","==");
+            int menuAnswer = nextIntErrorHandling("Select an option: ", "1, 2, 3, 4, 5","==");
             switch (menuAnswer) {
                 case 1:
-                    addProduct(scanner);
+                    addProduct();
                     break;
                 case 2:
-                    deleteProduct(scanner);
+                    deleteProduct();
                     break;
                 case 3:
                     getProductList();
@@ -156,7 +175,7 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
     }
 
     @Override
-    public void addProduct(Scanner scanner) {
+    public void addProduct() {
         if (productList.size() >= MAX_PRODUCT) {
             System.out.println("The product list is full!");
             menu();
@@ -165,57 +184,58 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
                 "1. Add a new Electronic to the system\n" +
                 "2. Add a new Clothing to the system\n" +
                 "------------------------------------------------------");
-        int answer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2", "==");
+        int answer = nextIntErrorHandling("Select an option: ", "1, 2", "==");
         System.out.println("------------------------------------------------------");
         String productId;
         if (answer == 1) {
-            productId = nextErrorHandling(scanner, "Enter product id (format: E001): ", "4", "E==");
+            productId = nextErrorHandling("Enter product id (format: E001): ", "4", "E==");
         } else {
-            productId = nextErrorHandling(scanner, "Enter product id (format: C001): ", "4", "C==");
+            productId = nextErrorHandling("Enter product id (format: C001): ", "4", "C==");
         }
 //            scanner.nextLine();
         for (Product product : productList) {
             if (product.getProductId().equals(productId)) {
                 System.out.println("\nProduct already exists!\n" +
                         "------------------------------------------------------");
-                String answer2 = nextErrorHandling(scanner, "Do you want to add a new product? (Y/N): ", "Y, N", "===");
+                String answer2 = nextErrorHandling("Do you want to add a new product? (Y/N): ", "Y, N", "===");
                 String answer2Lower = answer2.toLowerCase();
                 if (answer2Lower.equals("y")) {
-                    addProduct(scanner);
+                    addProduct();
                 } else {
                     menu();
                 }
             }
         }
-        String productName = nextLineErrorHandling(scanner, "Enter product name: ", "3", ">=");
-        int numAvailableItems = nextIntErrorHandling(scanner, "Enter number of available items: ", "0",">");
-        double productPrice = nextDoubleErrorHandling(scanner, "Enter product price: ", "0",">");
+        String productName = nextLineErrorHandling("Enter product name: ", "3", ">=");
+        int numAvailableItems = nextIntErrorHandling("Enter number of available items: ", "0",">");
+        double productPrice = nextDoubleErrorHandling("Enter product price: ", "0",">");
         if (answer == 1) {
 //                scanner.nextLine();
-            String productBrand = nextLineErrorHandling(scanner, "Enter product brand: ", "3", ">=");
-            int productWarranty = nextIntErrorHandling(scanner, "Enter product warranty(months): ", "0",">=");
+            String productBrand = nextLineErrorHandling("Enter product brand: ", "3", ">=");
+            int productWarranty = nextIntErrorHandling("Enter product warranty(months): ", "0",">=");
             Product electronic = new Electronics(productId, productName, numAvailableItems, productPrice, productBrand, productWarranty);
             productList.add(electronic);
         } else {
-            String productSize = nextErrorHandling(scanner, "Enter product size (S, M, L, XL): ", "S, M, L, XL","===");
+            String productSize = nextErrorHandling("Enter product size (S, M, L, XL): ", "S, M, L, XL","===");
 //                scanner.nextLine();
-            String productColour = nextLineErrorHandling(scanner, "Enter product colour: ","3", ">=");
+            String productColour = nextLineErrorHandling("Enter product colour: ","3", ">=");
             Product clothing = new Clothing(productId, productName, numAvailableItems, productPrice, productSize, productColour);
             productList.add(clothing);
         }
         System.out.println("\nProduct added successfully!\n" +
                 "------------------------------------------------------");
-        String answer2 = nextErrorHandling(scanner, "Do you want to add another product? (Y/N): ", "Y, N", "===");
+        String answer2 = nextErrorHandling("Do you want to add another product? (Y/N): ", "Y, N", "===");
         String answer2Lower = answer2.toLowerCase();
         if (answer2Lower.equals("y")) {
-            addProduct(scanner);
+            addProduct();
         } else {
             menu();
         }
     }
 
     @Override
-    public void deleteProduct(Scanner scanner) {
+    public void deleteProduct() {
+        Scanner scanner1 = new Scanner(System.in);
         if (productList.size() == 0) {
             System.out.println("\n" +
                     "The product list is empty!");
@@ -225,13 +245,13 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
                 "1. Delete an Electronic product from the system\n" +
                 "2. Delete a Clothing product from the system\n" +
                 "------------------------------------------------------");
-        int answer = nextIntErrorHandling(scanner, "Select an option: ", "1, 2", "==");
+        int answer = nextIntErrorHandling("Select an option: ", "1, 2", "==");
         System.out.println("------------------------------------------------------");
         String productId;
         if (answer == 1 ) {
-            productId = nextErrorHandling(scanner, "Enter product id (format: E001): ", "4", "E==");
+            productId = nextErrorHandling("Enter product id (format: E001): ", "4", "E==");
         } else {
-            productId = nextErrorHandling(scanner, "Enter product id (format: C001): ", "4", "C==");
+            productId = nextErrorHandling("Enter product id (format: C001): ", "4", "C==");
         }
         Iterator<Product> iterator = productList.iterator();
         while (iterator.hasNext()) {
@@ -258,10 +278,10 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
 //        for (Product product : productList) {
 //        }
         System.out.println("------------------------------------------------------");
-        String answer2 = nextErrorHandling(scanner, "Do you want to delete another product? (Y/N): ", "Y, N", "===");
+        String answer2 = nextErrorHandling("Do you want to delete another product? (Y/N): ", "Y, N", "===");
         String answer2Lower = answer2.toLowerCase();
         if (answer2Lower.equals("y")) {
-            deleteProduct(scanner);
+            deleteProduct();
         } else {
             menu();
         }
@@ -449,7 +469,8 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
 //        }
 //    }
 
-    public int nextIntErrorHandling(Scanner scanner, String message, String condition, String operator) {
+    public int nextIntErrorHandling(String message, String condition, String operator) {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print(message);
             if (scanner.hasNextInt()) {
@@ -488,7 +509,8 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
         }
     }
 
-    public String nextLineErrorHandling(Scanner scanner, String message, String condition, String operator) {
+    public String nextLineErrorHandling(String message, String condition, String operator) {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print(message);
             if (scanner.hasNextLine()) {
@@ -515,7 +537,8 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
         }
     }
 
-    public String nextErrorHandling(Scanner scanner, String message, String condition, String operator) {
+    public String nextErrorHandling(String message, String condition, String operator) {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print(message);
             if (scanner.hasNext()) {
@@ -547,7 +570,8 @@ public class WestminsterShoppingManager extends JFrame implements ShoppingManage
         }
     }
 
-    public double nextDoubleErrorHandling(Scanner scanner, String message, String condition, String operator) {
+    public double nextDoubleErrorHandling(String message, String condition, String operator) {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print(message);
             if (scanner.hasNextDouble()) {

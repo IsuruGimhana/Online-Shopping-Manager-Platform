@@ -9,6 +9,9 @@ public class ProductTableModel extends AbstractTableModel {
     public void setProductList() {
         productList = WestminsterShoppingManager.getProductList();
     }
+//    public ArrayList<Product> getProductList() {
+//        return productList;
+//    }
 
     @Override
     public int getRowCount() {
@@ -24,36 +27,34 @@ public class ProductTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object temp = null;
         if (productList.size() > 0 && rowIndex < productList.size()) {
-            if (columnIndex == 0) {
-                temp = productList.get(rowIndex).getProductId();
-            }
-            else if (columnIndex == 1) {
-                temp = productList.get(rowIndex).getProductName();
-            }
-            else if (columnIndex == 2) {
-                if(productList.get(rowIndex) instanceof Electronics)//Check the instance type and set the value to be Electronic or Clothing
-                    temp = "Electronics";
-                else
-                    temp = "Clothing";
-            }
-            else if (columnIndex == 3) {
-                temp = productList.get(rowIndex).getProductPrice();
-            }
-            else if (columnIndex == 4) {
-                if (productList.get(rowIndex) instanceof Electronics) {
-                    Electronics electronics = (Electronics) productList.get(rowIndex);
-                    temp = electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty";
-                } else {
-                    Clothing clothing = (Clothing) productList.get(rowIndex);
-                    temp = clothing.getClothingSize() + ", " + clothing.getClothingColour();
+            switch (columnIndex) {
+                case 0:
+                    temp = productList.get(rowIndex).getProductId();
+                    break;
+                case 1:
+                    temp = productList.get(rowIndex).getProductName();
+                    break;
+                case 2:
+                    if (productList.get(rowIndex) instanceof Electronics) {//Check the instance type and set the value to be Electronic or Clothing
+                        temp = "Electronics";
+                    } else {
+                        temp = "Clothing";
+                    }
+                    break;
+                case 3:
+                    temp = productList.get(rowIndex).getProductPrice();
+                    break;
+                case 4: {
+                    if (productList.get(rowIndex) instanceof Electronics) {
+                        Electronics electronics = (Electronics) productList.get(rowIndex);
+                        temp = electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty";
+                    } else {
+                        Clothing clothing = (Clothing) productList.get(rowIndex);
+                        temp = clothing.getClothingSize() + ", " + clothing.getClothingColour();
+                    }
                 }
             }
         }
         return temp;
     }
-    //show the column name
-    public String getColumnName(int col) {
-        return columnNames[col];
-    }
-
 }

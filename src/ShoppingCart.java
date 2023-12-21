@@ -4,6 +4,7 @@
  * @author Isuru Gimhana
  */
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,6 +44,7 @@ public class ShoppingCart extends JFrame {
         int quantity = 1;
         ShoppingCartTableModel tableModel = new ShoppingCartTableModel(cartList, quantity);
         JTable table = new JTable(tableModel);
+        TableColumn column = table.getColumnModel().getColumn(0);
 
         table.getTableHeader().setPreferredSize(new Dimension(200, 30));
         table.setRowHeight(30);

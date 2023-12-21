@@ -2,8 +2,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,33 +14,47 @@ public class WestminsterShoppingCentre extends JFrame{
     private JPanel footerPanel;
     private JPanel sortPanel;
     private JPanel infoPanel;
-    private JButton shoppingCart;
+    private JPanel tablePanel;
+    private JButton shoppingCartButton;
 
     public WestminsterShoppingCentre() throws HeadlessException {
-        ArrayList<Product> productList = WestminsterShoppingManager.getProductList();
+        productList = WestminsterShoppingManager.getProductList();
         setTitle("Westminster Shopping Centre");
-        setSize(1280,720);
+        setSize(800,600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         headerPanel = new JPanel();
         bodyPanel = new JPanel();
         footerPanel = new JPanel();
         sortPanel = new JPanel();
-
-        this.getContentPane().setLayout(new BorderLayout());
-        this.getContentPane().add(headerPanel, BorderLayout.NORTH);
-        this.getContentPane().add(bodyPanel, BorderLayout.CENTER);
-        this.getContentPane().add(footerPanel, BorderLayout.SOUTH);
-        headerPanel.setLayout(new BorderLayout());
+        tablePanel = new JPanel();
 
         headerPanel.setBackground(Color.BLACK);
         bodyPanel.setBackground(Color.GRAY);
         footerPanel.setBackground(Color.LIGHT_GRAY);
         sortPanel.setBackground(Color.pink);
 
-        shoppingCart = new JButton("Shopping Cart");
+//        this.getContentPane().setLayout(new BorderLayout());
+        this.getContentPane().setLayout(new GridLayout(2,1));
+        this.getContentPane().add(tablePanel);
+        this.getContentPane().add(footerPanel);
+//        this.getContentPane().add(headerPanel, BorderLayout.NORTH);
+//        this.getContentPane().add(bodyPanel, BorderLayout.CENTER);
+//        this.getContentPane().add(footerPanel, BorderLayout.SOUTH);
+
+        tablePanel.setLayout(new BorderLayout());
+        tablePanel.add(headerPanel, BorderLayout.NORTH);
+        tablePanel.add(bodyPanel, BorderLayout.CENTER);
+        headerPanel.setLayout(new BorderLayout());
+        bodyPanel.setLayout(new GridLayout(1,1));
+
+//header
+        shoppingCartButton = new JButton("Shopping Cart");
+        ShoppingCart shoppingCart = new ShoppingCart();
+        EventListener shoppingCartEventListener = new EventListener(shoppingCart);
+        shoppingCartButton.addActionListener(shoppingCartEventListener);
 
         headerPanel.add(sortPanel, BorderLayout.WEST);
-        headerPanel.add(shoppingCart, BorderLayout.EAST);
+        headerPanel.add(shoppingCartButton, BorderLayout.EAST);
 
         sortPanel.setLayout(new BorderLayout(5,5));
         sortPanel.setBorder(BorderFactory.createEmptyBorder(2,15,2,5));
@@ -89,6 +101,21 @@ public class WestminsterShoppingCentre extends JFrame{
         ProductTableModel tableModel = new ProductTableModel();
         tableModel.setProductList();
         JTable table = new JTable(tableModel);
+
+        table.getTableHeader().setPreferredSize(new Dimension(200, 30));
+        table.setRowHeight(30);
+        table.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        table.setShowGrid(true);
+        table.setGridColor(Color.BLACK);
+        table.setShowVerticalLines(false);
+
+//        table.getTableHeader().setBorder(BorderFactory.createLineBorder(Color.blue));
+//        table.setGridColor(Color.blue);
+        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table.getColumnModel().getColumn(2).setPreferredWidth(200);
+        table.getColumnModel().getColumn(3).setPreferredWidth(200);
+        table.getColumnModel().getColumn(4).setPreferredWidth(500);
         JScrollPane tableScrollPane = new JScrollPane(table);
         bodyPanel.add(tableScrollPane);
 
@@ -96,12 +123,20 @@ public class WestminsterShoppingCentre extends JFrame{
         footerPanel.setLayout(new BorderLayout());
         JLabel detailsHeader = new JLabel("Selected Product Details");
         footerPanel.add(detailsHeader, BorderLayout.NORTH);
-        TableListener tableListener = new TableListener(table);
-        table.getSelectionModel().addListSelectionListener(tableListener);
+        EventListener tableEventListener = new EventListener(table);
+        table.getSelectionModel().addListSelectionListener(tableEventListener);
 
         //Add to cart button
+        JPanel addToCartPanel = new JPanel();
+        addToCartPanel.setLayout(new FlowLayout());
         JButton addToCart = new JButton("Add to Cart");
-        footerPanel.add(addToCart, BorderLayout.SOUTH);
+        addToCart.setPreferredSize(new Dimension(150, 50));
+        footerPanel.add(addToCartPanel, BorderLayout.SOUTH);
+        addToCartPanel.add(addToCart);
+//        ShoppingCart shoppingCart = new ShoppingCart();
+        EventListener shoppingCartEventListener2 = new EventListener(table, shoppingCart);
+        addToCart.addActionListener(shoppingCartEventListener2);
+
 
         infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(6,1));
@@ -109,17 +144,26 @@ public class WestminsterShoppingCentre extends JFrame{
 
 
     }
-    private class TableListener implements ListSelectionListener {
+    private class EventListener implements ListSelectionListener, ActionListener {
         private JTable table;
-        public TableListener(JTable table) {
+        private ShoppingCart shoppingCart;
+        public EventListener(ShoppingCart shoppingCart) {
+            this.shoppingCart = shoppingCart;
+        }
+        public EventListener(JTable table) {
             this.table = table;
         }
+        public EventListener(JTable table, ShoppingCart shoppingCart) {
+            this.table = table;
+            this.shoppingCart = shoppingCart;
+        }
+
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            if (table.getSelectedRow() != -1) {
-                int selectedRow = table.getSelectedRow();
-                productList = WestminsterShoppingManager.getProductList();
-                Product product = productList.get(selectedRow);
+            if (table.getSelectedRow() != -1) {//if a row is selected
+                int selectedRow = table.getSelectedRow();//get the selected row
+//                productList = WestminsterShoppingManager.getProductList();
+                Product product = productList.get(selectedRow);//get the product object from the productList using the selected row
 
                 infoPanel.removeAll();
 
@@ -127,13 +171,14 @@ public class WestminsterShoppingCentre extends JFrame{
                 String productName = product.getProductName();
                 int numAvailableItems = product.getNumAvailableItems();
                 double productPrice = product.getProductPrice();
+                String formattedProductPrice = String.format("%.2f", productPrice);
                 JLabel productIdLabel = new JLabel("Product ID: " + productId);
                 infoPanel.add(productIdLabel);
                 JLabel productNameLabel = new JLabel("Product Name: " + productName);
                 infoPanel.add(productNameLabel);
                 JLabel availableItemsLabel = new JLabel("Number of Available Items: " + numAvailableItems);
                 infoPanel.add(availableItemsLabel);
-                JLabel productPriceLabel = new JLabel("Product Price: " + productPrice);
+                JLabel productPriceLabel = new JLabel("Product Price: " + formattedProductPrice + " LKR");
                 infoPanel.add(productPriceLabel);
                 if (product instanceof Electronics) {
                     Electronics electronics = (Electronics) product;
@@ -153,6 +198,23 @@ public class WestminsterShoppingCentre extends JFrame{
                     infoPanel.add(clothingColourLabel);
                 }
                 infoPanel.revalidate();
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton button = (JButton) e.getSource();
+            if (button.getText().equals("Shopping Cart")) {
+//                ShoppingCart shoppingCartFrame = new ShoppingCart();
+                shoppingCart.setVisible(true);
+            } else if (button.getText().equals("Add to Cart")) {
+                if (table.getSelectedRow() != -1) {
+                    int selectedRow = table.getSelectedRow();
+                    Product product = productList.get(selectedRow);
+//                    ShoppingCart shoppingCart = new ShoppingCart();
+                    shoppingCart.addProduct(product);
+
+                }
             }
         }
     }

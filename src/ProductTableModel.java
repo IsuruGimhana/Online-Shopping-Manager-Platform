@@ -42,7 +42,7 @@ public class ProductTableModel extends AbstractTableModel {
                     }
                     break;
                 case 3:
-                    temp = productList.get(rowIndex).getProductPrice();
+                    temp = String.format("%.2f", productList.get(rowIndex).getProductPrice()) + " LKR";
                     break;
                 case 4: {
                     if (productList.get(rowIndex) instanceof Electronics) {
@@ -56,5 +56,9 @@ public class ProductTableModel extends AbstractTableModel {
             }
         }
         return temp;
+    }
+    @Override
+    public String getColumnName(int columnIndex) {
+        return columnNames[columnIndex];
     }
 }

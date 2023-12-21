@@ -44,10 +44,10 @@ public abstract class Product implements Comparable<Product> {
     public void setProductName() {
         this.productName = productName;
     }
-    public void setNumAvailableItems() {
+    public void setNumAvailableItems(int numAvailableItems) {
         this.numAvailableItems = numAvailableItems;
     }
-    public void setProductPrice() {
+    public void setProductPrice(double productPrice) {
         this.productPrice = productPrice;
     }
 

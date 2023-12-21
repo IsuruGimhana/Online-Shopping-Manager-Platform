@@ -212,8 +212,20 @@ public class WestminsterShoppingCentre extends JFrame{
                     int selectedRow = table.getSelectedRow();
                     Product product = productList.get(selectedRow);
 //                    ShoppingCart shoppingCart = new ShoppingCart();
-                    shoppingCart.addProduct(product);
-
+                    if (shoppingCart.getCartList().size() == 0) {
+                        shoppingCart.addProduct(product);
+                    } else {
+                        boolean productExists = false;
+                        for (int i = 0; i < shoppingCart.getCartList().size(); i++) {
+                            if (shoppingCart.getCartList().get(i).getProductId().equals(product.getProductId())) {
+                                productExists = true;
+                                break;
+                            }
+                        }
+                        if (!productExists) {
+                            shoppingCart.addProduct(product);
+                        }
+                    }
                 }
             }
         }

@@ -6,12 +6,12 @@ public class ProductTableModel extends AbstractTableModel {
     private String[] columnNames = {"Product ID", "Name", "Category", "Price", "Info"};
     public ProductTableModel() {}
 
-    public void setProductList() {
-        productList = WestminsterShoppingManager.getProductList();
+    public void setProductList(ArrayList<Product> productList) {
+        this.productList = productList;
     }
-//    public ArrayList<Product> getProductList() {
-//        return productList;
-//    }
+    public ArrayList<Product> getProductList() {
+        return productList;
+    }
 
     @Override
     public int getRowCount() {

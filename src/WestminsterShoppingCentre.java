@@ -9,16 +9,21 @@ import java.util.ArrayList;
 
 public class WestminsterShoppingCentre extends JFrame{
     private ArrayList<Product> productList;
+    private ArrayList<Product> filteredProductList;
+    private ProductTableModel tableModel;
     private JPanel headerPanel;
     private JPanel bodyPanel;
     private JPanel footerPanel;
     private JPanel sortPanel;
     private JPanel infoPanel;
     private JPanel tablePanel;
+    private JComboBox categoryDropDown;
     private JButton shoppingCartButton;
+    private JButton addToCart;
 
     public WestminsterShoppingCentre() throws HeadlessException {
         productList = WestminsterShoppingManager.getProductList();
+        filteredProductList = new ArrayList<>();
         setTitle("Westminster Shopping Centre");
         setSize(800,600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,13 +73,16 @@ public class WestminsterShoppingCentre extends JFrame{
         JLabel category = new JLabel("Category");
         sortTypePanel.add(category);
         String[] productCategory = {"All", "Electronics", "Clothing"};
-        JComboBox categoryDropDown = new JComboBox(productCategory);
+        categoryDropDown = new JComboBox(productCategory);
         categoryDropDown.setBorder(new EmptyBorder(5,0,0,0));
         sortValue.add(categoryDropDown);
         JLabel sort = new JLabel("Sort");
         sortTypePanel.add(sort);
         JCheckBox ascendingOrder = new JCheckBox("a-z");
         sortValue.add(ascendingOrder);
+
+        EventListener categoryDropDownEventListener = new EventListener();
+        categoryDropDown.addActionListener(categoryDropDownEventListener);
 
         //table
 //        String[] columnNames = {"Product ID", "Name", "Category", "Price", "Info"};
@@ -98,8 +106,9 @@ public class WestminsterShoppingCentre extends JFrame{
 //        }
 //        TableModel tableModel = new DefaultTableModel(tableData, columnNames);
 //        JTable table = new JTable(tableModel);
-        ProductTableModel tableModel = new ProductTableModel();
-        tableModel.setProductList();
+        tableModel = new ProductTableModel();
+        filteredProductList.addAll(productList);
+        tableModel.setProductList(filteredProductList);
         JTable table = new JTable(tableModel);
 
         table.getTableHeader().setPreferredSize(new Dimension(200, 30));
@@ -129,7 +138,7 @@ public class WestminsterShoppingCentre extends JFrame{
         //Add to cart button
         JPanel addToCartPanel = new JPanel();
         addToCartPanel.setLayout(new FlowLayout());
-        JButton addToCart = new JButton("Add to Cart");
+        addToCart = new JButton("Add to Cart");
         addToCart.setPreferredSize(new Dimension(150, 50));
         footerPanel.add(addToCartPanel, BorderLayout.SOUTH);
         addToCartPanel.add(addToCart);
@@ -147,6 +156,7 @@ public class WestminsterShoppingCentre extends JFrame{
     private class EventListener implements ListSelectionListener, ActionListener {
         private JTable table;
         private ShoppingCart shoppingCart;
+        public EventListener() {}
         public EventListener(ShoppingCart shoppingCart) {
             this.shoppingCart = shoppingCart;
         }
@@ -203,11 +213,32 @@ public class WestminsterShoppingCentre extends JFrame{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            JButton button = (JButton) e.getSource();
-            if (button.getText().equals("Shopping Cart")) {
-//                ShoppingCart shoppingCartFrame = new ShoppingCart();
+            Object source = e.getSource();
+            if (source == categoryDropDown) {
+                filteredProductList.clear();
+                String selectedCategory = (String) categoryDropDown.getSelectedItem();
+                if (selectedCategory.equals("All")) {
+                    for (Product product : productList) {
+                        filteredProductList.add(product);
+                    }
+                } else if (selectedCategory.equals("Electronics")) {
+                    for (Product product : productList) {
+                        if (product instanceof Electronics) {
+                            filteredProductList.add(product);
+                        }
+                    }
+                } else if (selectedCategory.equals("Clothing")) {
+                    for (Product product : productList) {
+                        if (product instanceof Clothing) {
+                            filteredProductList.add(product);
+                        }
+                    }
+                }
+                tableModel.setProductList(filteredProductList);
+                tableModel.fireTableDataChanged();
+            } else if (source == shoppingCartButton) {
                 shoppingCart.setVisible(true);
-            } else if (button.getText().equals("Add to Cart")) {
+            } else if (source == addToCart) {
                 if (table.getSelectedRow() != -1) {
                     int selectedRow = table.getSelectedRow();
                     Product product = productList.get(selectedRow);
@@ -228,6 +259,31 @@ public class WestminsterShoppingCentre extends JFrame{
                     }
                 }
             }
+//            JButton button = (JButton) e.getSource();
+//            if (button.getText().equals("Shopping Cart")) {
+////                ShoppingCart shoppingCartFrame = new ShoppingCart();
+//                shoppingCart.setVisible(true);
+//            } else if (button.getText().equals("Add to Cart")) {
+//                if (table.getSelectedRow() != -1) {
+//                    int selectedRow = table.getSelectedRow();
+//                    Product product = productList.get(selectedRow);
+////                    ShoppingCart shoppingCart = new ShoppingCart();
+//                    if (shoppingCart.getCartList().size() == 0) {
+//                        shoppingCart.addProduct(product);
+//                    } else {
+//                        boolean productExists = false;
+//                        for (int i = 0; i < shoppingCart.getCartList().size(); i++) {
+//                            if (shoppingCart.getCartList().get(i).getProductId().equals(product.getProductId())) {
+//                                productExists = true;
+//                                break;
+//                            }
+//                        }
+//                        if (!productExists) {
+//                            shoppingCart.addProduct(product);
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }

@@ -22,6 +22,11 @@ public class ShoppingCartTableModel extends AbstractTableModel {
     }
 
     @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {//Make the quantity column editable
+        return columnIndex == 1;
+    }
+
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object temp = null;
         if (productList.size() > 0 && rowIndex < productList.size()) {
@@ -29,10 +34,10 @@ public class ShoppingCartTableModel extends AbstractTableModel {
                 case 0:
                     if (productList.get(rowIndex) instanceof Electronics) {//Check the instance type and set the value to be Electronic or Clothing
                         Electronics electronics = (Electronics) productList.get(rowIndex);
-                        temp = electronics.getProductId() + "\n" + electronics.getProductName() + "\n" + electronics.getElectronicBrand() + "\n" + electronics.getElectronicWarrantyPeriod() + " months warranty";
+                        temp = electronics.getProductId() + ", " + electronics.getProductName() + ", " + electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty";
                     } else {
                         Clothing clothing = (Clothing) productList.get(rowIndex);
-                        temp = clothing.getProductId() + "\n" + clothing.getProductName() + "\n" + clothing.getClothingSize() + "\n" + clothing.getClothingColour();
+                        temp = clothing.getProductId() + ", " + clothing.getProductName() + ", " + clothing.getClothingSize() + ", " + clothing.getClothingColour();
                     }
                     break;
                 case 1:

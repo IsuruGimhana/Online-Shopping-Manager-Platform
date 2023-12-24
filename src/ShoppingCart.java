@@ -210,6 +210,48 @@ public class ShoppingCart extends JFrame {
         headerPanel.add(productPanel);
         JScrollPane scrollPane = new JScrollPane(headerPanel);
         this.getContentPane().add(scrollPane);
+
+
+        // Final price panel
+        JPanel footerPanel = new JPanel();
+        footerPanel.setLayout(new BorderLayout());
+        footerPanel.setPreferredSize(new Dimension(400, 120));
+        JPanel leftFooterPanel = new JPanel();
+        leftFooterPanel.setLayout(new GridLayout(4,1));
+        JPanel rightFooterPanel = new JPanel();
+        rightFooterPanel.setLayout(new GridLayout(4,1));
+        JLabel totalLabel = new JLabel("Total: ");
+        totalLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel totalValueLabel = new JLabel("0");
+        totalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel firstPurchaseDiscountLabel = new JLabel("First purchase discount(10%): ");
+        firstPurchaseDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel firstPurchaseDiscountValueLabel = new JLabel("-0");
+        firstPurchaseDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel sameCategoryDiscountLabel = new JLabel("Three Items in the same category discount(20%): ");
+        sameCategoryDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel sameCategoryDiscountValueLabel = new JLabel("-0");
+        sameCategoryDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel finalTotalLabel = new JLabel("Final Total: ");
+        finalTotalLabel.setHorizontalAlignment(JLabel.RIGHT);
+        JLabel finalTotalValueLabel = new JLabel("0");
+        finalTotalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+        leftFooterPanel.add(totalLabel);
+        rightFooterPanel.add(totalValueLabel);
+        leftFooterPanel.add(firstPurchaseDiscountLabel);
+        rightFooterPanel.add(firstPurchaseDiscountValueLabel);
+        leftFooterPanel.add(sameCategoryDiscountLabel);
+        rightFooterPanel.add(sameCategoryDiscountValueLabel);
+        leftFooterPanel.add(finalTotalLabel);
+        rightFooterPanel.add(finalTotalValueLabel);
+
+        footerPanel.add(leftFooterPanel, BorderLayout.WEST);
+        footerPanel.add(rightFooterPanel, BorderLayout.CENTER);
+
+        JPanel finalTotalPanel = new JPanel(new FlowLayout());
+        finalTotalPanel.add(footerPanel);
+        this.getContentPane().add(finalTotalPanel);
     }
 
     public void updateProductPanel() {
@@ -228,9 +270,8 @@ public class ShoppingCart extends JFrame {
 
         for (Product product : cartList) {
             JPanel productDescriptionPanel = new JPanel();
-            productDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            productDescriptionPanel.setPreferredSize(new Dimension(250, 60));
             productDescriptionPanel.setLayout(new GridLayout(3,1));
+            productDescriptionPanel.setPreferredSize(new Dimension(200,60));
             JLabel prductId = new JLabel(product.getProductId());
             prductId.setHorizontalAlignment(JLabel.CENTER);
             JLabel productName = new JLabel(product.getProductName());
@@ -247,9 +288,17 @@ public class ShoppingCart extends JFrame {
             productDescriptionPanel.add(prductId);
             productDescriptionPanel.add(productName);
             productDescriptionPanel.add(temp);
+            JPanel completeProductDescriptionPanel = new JPanel(new FlowLayout());
+            completeProductDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//            completeProductDescriptionPanel.setPreferredSize(new Dimension(250, 60));
+            JButton removeProductButton = new JButton("-");
+            removeProductButton.setPreferredSize(new Dimension(20, 20));
+            completeProductDescriptionPanel.add(removeProductButton);
+            completeProductDescriptionPanel.add(productDescriptionPanel);
 
             JLabel defaultProductQuantity = new JLabel("1");
-            JLabel productPrice = new JLabel(product.getProductPrice() + " LKR");
+            String formattedProductPrice = String.format("%.2f", product.getProductPrice());
+            JLabel productPrice = new JLabel(formattedProductPrice + " LKR");
             productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             productPrice.setPreferredSize(new Dimension(250, 60));
             productPrice.setHorizontalAlignment(JLabel.CENTER);
@@ -264,7 +313,7 @@ public class ShoppingCart extends JFrame {
             quantityPanel.add(minus);
             quantityPanel.add(defaultProductQuantity);
             quantityPanel.add(plus);
-            productPanel.add(productDescriptionPanel);
+            productPanel.add(completeProductDescriptionPanel);
             productPanel.add(quantityPanel);
             productPanel.add(productPrice);
         }

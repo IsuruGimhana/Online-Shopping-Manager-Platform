@@ -151,58 +151,60 @@ public class ShoppingCart extends JFrame {
         productPanel.setLayout(new GridLayout(cartList.size() + 1, 3));
         productPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        for (String columnName : columnNames) {
-            JLabel header = new JLabel(columnName);
-            header.setOpaque(true);
-            header.setBackground(Color.LIGHT_GRAY);
-            header.setPreferredSize(new Dimension(250,30));
-            header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            header.setHorizontalAlignment(JLabel.CENTER);
-            productPanel.add(header);
-        }
+        updateProductPanel();
 
-        for (Product product : cartList) {
-            JPanel productDescriptionPanel = new JPanel();
-            productDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            productDescriptionPanel.setPreferredSize(new Dimension(250, 60));
-            productDescriptionPanel.setLayout(new GridLayout(3,1));
-            JLabel prductId = new JLabel(product.getProductId());
-            prductId.setHorizontalAlignment(JLabel.CENTER);
-            JLabel productName = new JLabel(product.getProductName());
-            productName.setHorizontalAlignment(JLabel.CENTER);
-            JLabel temp;
-            if (product instanceof Electronics) {
-                Electronics electronics = (Electronics) product;
-                temp = new JLabel(electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty");
-            } else {
-                Clothing clothing = (Clothing) product;
-                temp = new JLabel(clothing.getClothingSize() + ", " + clothing.getClothingColour());
-            }
-            temp.setHorizontalAlignment(JLabel.CENTER);
-            productDescriptionPanel.add(prductId);
-            productDescriptionPanel.add(productName);
-            productDescriptionPanel.add(temp);
-
-            JLabel defaultProductQuantity = new JLabel("1");
-            JLabel productPrice = new JLabel(product.getProductPrice() + " LKR");
-            productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            productPrice.setPreferredSize(new Dimension(250, 60));
-            productPrice.setHorizontalAlignment(JLabel.CENTER);
-            JPanel quantityPanel = new JPanel();
-            quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
-            quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            quantityPanel.setPreferredSize(new Dimension(250, 60));
-            JButton plus = new JButton("+");
-            JButton minus = new JButton("-");
-            plus.setPreferredSize(new Dimension(20, 20));
-            minus.setPreferredSize(new Dimension(20, 20));
-            quantityPanel.add(minus);
-            quantityPanel.add(defaultProductQuantity);
-            quantityPanel.add(plus);
-            productPanel.add(productDescriptionPanel);
-            productPanel.add(quantityPanel);
-            productPanel.add(productPrice);
-        }
+//        for (String columnName : columnNames) {
+//            JLabel header = new JLabel(columnName);
+//            header.setOpaque(true);
+//            header.setBackground(Color.LIGHT_GRAY);
+//            header.setPreferredSize(new Dimension(250,30));
+//            header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//            header.setHorizontalAlignment(JLabel.CENTER);
+//            productPanel.add(header);
+//        }
+//
+//        for (Product product : cartList) {
+//            JPanel productDescriptionPanel = new JPanel();
+//            productDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//            productDescriptionPanel.setPreferredSize(new Dimension(250, 60));
+//            productDescriptionPanel.setLayout(new GridLayout(3,1));
+//            JLabel prductId = new JLabel(product.getProductId());
+//            prductId.setHorizontalAlignment(JLabel.CENTER);
+//            JLabel productName = new JLabel(product.getProductName());
+//            productName.setHorizontalAlignment(JLabel.CENTER);
+//            JLabel temp;
+//            if (product instanceof Electronics) {
+//                Electronics electronics = (Electronics) product;
+//                temp = new JLabel(electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty");
+//            } else {
+//                Clothing clothing = (Clothing) product;
+//                temp = new JLabel(clothing.getClothingSize() + ", " + clothing.getClothingColour());
+//            }
+//            temp.setHorizontalAlignment(JLabel.CENTER);
+//            productDescriptionPanel.add(prductId);
+//            productDescriptionPanel.add(productName);
+//            productDescriptionPanel.add(temp);
+//
+//            JLabel defaultProductQuantity = new JLabel("1");
+//            JLabel productPrice = new JLabel(product.getProductPrice() + " LKR");
+//            productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//            productPrice.setPreferredSize(new Dimension(250, 60));
+//            productPrice.setHorizontalAlignment(JLabel.CENTER);
+//            JPanel quantityPanel = new JPanel();
+//            quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
+//            quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//            quantityPanel.setPreferredSize(new Dimension(250, 60));
+//            JButton plus = new JButton("+");
+//            JButton minus = new JButton("-");
+//            plus.setPreferredSize(new Dimension(20, 20));
+//            minus.setPreferredSize(new Dimension(20, 20));
+//            quantityPanel.add(minus);
+//            quantityPanel.add(defaultProductQuantity);
+//            quantityPanel.add(plus);
+//            productPanel.add(productDescriptionPanel);
+//            productPanel.add(quantityPanel);
+//            productPanel.add(productPrice);
+//        }
 
         JPanel headerPanel = new JPanel(new FlowLayout());
         headerPanel.add(productPanel);

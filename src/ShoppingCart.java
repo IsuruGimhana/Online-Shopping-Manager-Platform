@@ -5,6 +5,8 @@
  */
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 //public class ShoppingCart extends JFrame {
@@ -139,6 +141,10 @@ public class ShoppingCart extends JFrame {
 
     String[] columnNames = {"Product", "Quantity", "Price"};
     JPanel productPanel;
+    JPanel completeProductDescriptionPanel;
+    JButton removeProductButton;
+    JButton plus;
+    JButton minus;
 
     public ShoppingCart() throws HeadlessException {
 //        this.cartList = new ArrayList<>();
@@ -149,6 +155,7 @@ public class ShoppingCart extends JFrame {
         this.getContentPane().setLayout(new GridLayout(2,1));
         productPanel = new JPanel();
         productPanel.setLayout(new GridLayout(cartList.size() + 1, 3));
+        productPanel.setName("productPanel");
         productPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         updateProductPanel();
@@ -268,36 +275,44 @@ public class ShoppingCart extends JFrame {
             productPanel.add(header);
         }
 
-        for (Product product : cartList) {
+        for (int i = 0 ; i < cartList.size() ; i++) {
             JPanel productDescriptionPanel = new JPanel();
+//            productDescriptionPanel.setName("productDescriptionPanel" + i);
             productDescriptionPanel.setLayout(new GridLayout(3,1));
             productDescriptionPanel.setPreferredSize(new Dimension(200,60));
-            JLabel prductId = new JLabel(product.getProductId());
+            JLabel prductId = new JLabel(cartList.get(i).getProductId());
             prductId.setHorizontalAlignment(JLabel.CENTER);
-            JLabel productName = new JLabel(product.getProductName());
+            JLabel productName = new JLabel(cartList.get(i).getProductName());
             productName.setHorizontalAlignment(JLabel.CENTER);
             JLabel temp;
-            if (product instanceof Electronics) {
-                Electronics electronics = (Electronics) product;
+            if (cartList.get(i) instanceof Electronics) {
+                Electronics electronics = (Electronics) cartList.get(i);
                 temp = new JLabel(electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty");
             } else {
-                Clothing clothing = (Clothing) product;
+                Clothing clothing = (Clothing) cartList.get(i);
                 temp = new JLabel(clothing.getClothingSize() + ", " + clothing.getClothingColour());
             }
             temp.setHorizontalAlignment(JLabel.CENTER);
             productDescriptionPanel.add(prductId);
             productDescriptionPanel.add(productName);
             productDescriptionPanel.add(temp);
-            JPanel completeProductDescriptionPanel = new JPanel(new FlowLayout());
+            completeProductDescriptionPanel = new JPanel(new FlowLayout());
+            completeProductDescriptionPanel.setName("completeProductDescriptionPanel");
             completeProductDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 //            completeProductDescriptionPanel.setPreferredSize(new Dimension(250, 60));
-            JButton removeProductButton = new JButton("-");
+            removeProductButton = new JButton("-");
+            //Set the button name
+            removeProductButton.setName("removeProductButton" + i);
+
+            EventListener removeProductListener = new EventListener();
+            removeProductButton.addActionListener(removeProductListener);
+
             removeProductButton.setPreferredSize(new Dimension(20, 20));
             completeProductDescriptionPanel.add(removeProductButton);
             completeProductDescriptionPanel.add(productDescriptionPanel);
 
             JLabel defaultProductQuantity = new JLabel("1");
-            String formattedProductPrice = String.format("%.2f", product.getProductPrice());
+            String formattedProductPrice = String.format("%.2f", cartList.get(i).getProductPrice());
             JLabel productPrice = new JLabel(formattedProductPrice + " LKR");
             productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             productPrice.setPreferredSize(new Dimension(250, 60));
@@ -306,8 +321,8 @@ public class ShoppingCart extends JFrame {
             quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
             quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             quantityPanel.setPreferredSize(new Dimension(250, 60));
-            JButton plus = new JButton("+");
-            JButton minus = new JButton("-");
+            plus = new JButton("+");
+            minus = new JButton("-");
             plus.setPreferredSize(new Dimension(20, 20));
             minus.setPreferredSize(new Dimension(20, 20));
             quantityPanel.add(minus);
@@ -319,6 +334,74 @@ public class ShoppingCart extends JFrame {
         }
         productPanel.revalidate();
         productPanel.repaint();
+    }
+
+    private class EventListener implements ActionListener {
+        private ArrayList<String> similarButtons;
+        public EventListener() {
+            this.similarButtons = new ArrayList<>();
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            similarButtons.clear();
+            JButton clickedButton = (JButton) e.getSource();
+            String commonButtonName = clickedButton.getName().substring(0,19);
+            String clickedButtonIndex = clickedButton.getName().substring(19);
+            int toRemoveIndex = Integer.parseInt(clickedButtonIndex);
+            System.out.println(commonButtonName);
+
+            if (commonButtonName.equals("removeProductButton")) {
+                System.out.println("yes");
+//                boolean toBeRemoved = false;
+//                int toRemoveIndex = 0;
+
+                for (Component componentPanel : productPanel.getComponents()) {
+                    if (componentPanel instanceof JPanel && componentPanel.getName() != null && (componentPanel.getName().equals("completeProductDescriptionPanel"))) {
+                        JPanel completeProductDescriptionPanel = (JPanel) componentPanel;
+                        for (Component buttonComponent : completeProductDescriptionPanel.getComponents()) {
+                            if (buttonComponent instanceof JButton && buttonComponent.getName().startsWith("removeProductButton")) {
+                                JButton btn = (JButton) buttonComponent;
+                                String buttonName = btn.getName();
+                                similarButtons.add(buttonName);
+                            }
+                        }
+                    }
+                }
+                for (String similarButton : similarButtons) {
+                    System.out.println(similarButton);
+                }
+
+                for (int i = 0; i < similarButtons.size(); i++) {
+                    if (similarButtons.get(i).equals("removeProductButton" + clickedButtonIndex)) {
+                        cartList.remove(toRemoveIndex);
+                        updateProductPanel();
+                    }
+                }
+            }
+
+//            if (text.equals()) {
+//                String buttonIndex = ((JButton) source).getName().substring(19);
+//                int integerButtonIndex = Integer.parseInt(buttonIndex);
+//                System.out.println(buttonIndex);
+//                boolean toBeRemoved = false;
+//                int toRemoveIndex = 0;
+//                for (int i = 0; i < cartList.size(); i++) {
+//                    if (i == integerButtonIndex) {
+//                        toBeRemoved = true;
+//                        toRemoveIndex = i;
+//                    }
+//                }
+//                if (toBeRemoved) {
+//                    cartList.remove(toRemoveIndex);
+//                    updateProductPanel();
+//                }
+//            }
+//             else if (source == plus) {
+//
+//            } else if (source == minus) {
+//
+//            }
+        }
     }
 
     public ArrayList<Product> getCartList() {

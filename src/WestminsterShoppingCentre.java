@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class WestminsterShoppingCentre extends JFrame{
     private ArrayList<Product> productList;
@@ -18,6 +19,8 @@ public class WestminsterShoppingCentre extends JFrame{
     private JPanel infoPanel;
     private JPanel tablePanel;
     private JComboBox categoryDropDown;
+    private JCheckBox ascendingOrder;
+    private JCheckBox descendingOrder;
     private JButton shoppingCartButton;
     private JButton addToCart;
 
@@ -76,13 +79,23 @@ public class WestminsterShoppingCentre extends JFrame{
         categoryDropDown = new JComboBox(productCategory);
         categoryDropDown.setBorder(new EmptyBorder(5,0,0,0));
         sortValue.add(categoryDropDown);
-        JLabel sort = new JLabel("Sort");
-        sortTypePanel.add(sort);
-        JCheckBox ascendingOrder = new JCheckBox("a-z");
-        sortValue.add(ascendingOrder);
 
         EventListener categoryDropDownEventListener = new EventListener();
         categoryDropDown.addActionListener(categoryDropDownEventListener);
+
+        JLabel sort = new JLabel("Sort");
+        sortTypePanel.add(sort);
+        JPanel alphabeticalOrderPanel = new JPanel();
+        alphabeticalOrderPanel.setLayout(new FlowLayout());
+        ascendingOrder = new JCheckBox("a-z");
+        descendingOrder = new JCheckBox("z-a");
+        alphabeticalOrderPanel.add(ascendingOrder);
+        alphabeticalOrderPanel.add(descendingOrder);
+        sortValue.add(alphabeticalOrderPanel);
+
+        EventListener sortEventListener = new EventListener();
+        ascendingOrder.addActionListener(sortEventListener);
+        descendingOrder.addActionListener(sortEventListener);
 
         //table
 //        String[] columnNames = {"Product ID", "Name", "Category", "Price", "Info"};
@@ -236,6 +249,18 @@ public class WestminsterShoppingCentre extends JFrame{
                 }
                 tableModel.setProductList(filteredProductList);
                 tableModel.fireTableDataChanged();
+
+            }else if (source == ascendingOrder) {
+                descendingOrder.setSelected(false);
+                Collections.sort(filteredProductList);
+                tableModel.setProductList(filteredProductList);
+                tableModel.fireTableDataChanged();
+            } else if (source == descendingOrder) {
+                ascendingOrder.setSelected(false);
+                Collections.sort(filteredProductList, Collections.reverseOrder());
+                tableModel.setProductList(filteredProductList);
+                tableModel.fireTableDataChanged();
+
             } else if (source == shoppingCartButton) {
                 shoppingCart.setVisible(true);
             } else if (source == addToCart) {

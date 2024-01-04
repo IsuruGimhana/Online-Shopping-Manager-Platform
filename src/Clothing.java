@@ -23,6 +23,12 @@ public class Clothing extends Product {
         this.clothingColour = clothingColour;
     }
 
+    public Clothing(Product cartProduct) {
+        super(cartProduct);
+        this.clothingSize = ((Clothing)cartProduct).getClothingSize();
+        this.clothingColour = ((Clothing)cartProduct).getClothingColour();
+    }
+
     /**
      * getters and setters
      */

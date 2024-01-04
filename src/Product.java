@@ -22,6 +22,13 @@ public abstract class Product implements Comparable<Product> {
         this.numAvailableItems = numAvailableItems;
         this.productPrice = productPrice;
     }
+
+    public Product(Product cartProduct) {
+        this.productId = cartProduct.getProductId();
+        this.productName = cartProduct.getProductName();
+        this.numAvailableItems = cartProduct.getNumAvailableItems();
+        this.productPrice = cartProduct.getProductPrice();
+    }
 /**
  * getters and setters
 */

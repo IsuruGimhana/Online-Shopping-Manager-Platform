@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 //public class ShoppingCart extends JFrame {
 //    private ArrayList<Product> cartList;
@@ -135,9 +136,10 @@ import java.util.ArrayList;
 //    }
 
 public class ShoppingCart extends JFrame {
-    private ArrayList<Product> cartList = new ArrayList<>() {{
-        add(new Electronics("E001", "iPhone 12", 10, 200000, "Apple", 12));
-        add(new Clothing("C001", "T-Shirt", 20, 1000, "M", "Red"));}};
+    private ArrayList<Product> cartList = new ArrayList<>();
+//    {{
+//        add(new Electronics("E001", "iPhone 12", 10, 200000, "Apple", 12));
+//        add(new Clothing("C001", "T-Shirt", 20, 1000, "M", "Red"));}};
 
     String[] columnNames = {"Product", "Quantity", "Price"};
     JPanel productPanel;
@@ -269,7 +271,7 @@ public class ShoppingCart extends JFrame {
             JLabel header = new JLabel(columnName);
             header.setOpaque(true);
             header.setBackground(Color.LIGHT_GRAY);
-            header.setPreferredSize(new Dimension(250,30));
+            header.setPreferredSize(new Dimension(250,60));
             header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             header.setHorizontalAlignment(JLabel.CENTER);
             productPanel.add(header);
@@ -311,7 +313,9 @@ public class ShoppingCart extends JFrame {
             completeProductDescriptionPanel.add(removeProductButton);
             completeProductDescriptionPanel.add(productDescriptionPanel);
 
-            JLabel defaultProductQuantity = new JLabel("1");
+            JLabel defaultProductQuantity = new JLabel(cartList.get(i).getNumAvailableItems() + "");
+            defaultProductQuantity.setName("defaultProductQuantity" + i);
+
             String formattedProductPrice = String.format("%.2f", cartList.get(i).getProductPrice());
             JLabel productPrice = new JLabel(formattedProductPrice + " LKR");
             productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -319,10 +323,20 @@ public class ShoppingCart extends JFrame {
             productPrice.setHorizontalAlignment(JLabel.CENTER);
             JPanel quantityPanel = new JPanel();
             quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
+            quantityPanel.setName("quantityPanel");
             quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             quantityPanel.setPreferredSize(new Dimension(250, 60));
+
             plus = new JButton("+");
+            plus.setName("plus" + i);
+            EventListener increaseQuantityListener = new EventListener();
+            plus.addActionListener(increaseQuantityListener);
+
             minus = new JButton("-");
+            minus.setName("minus" + i);
+            EventListener decreaseQuantityListener = new EventListener();
+            minus.addActionListener(decreaseQuantityListener);
+
             plus.setPreferredSize(new Dimension(20, 20));
             minus.setPreferredSize(new Dimension(20, 20));
             quantityPanel.add(minus);
@@ -337,24 +351,25 @@ public class ShoppingCart extends JFrame {
     }
 
     private class EventListener implements ActionListener {
+        private ArrayList<Product> productList;
         private ArrayList<String> similarButtons;
         public EventListener() {
             this.similarButtons = new ArrayList<>();
+            this.productList = WestminsterShoppingManager.getProductList();
         }
         @Override
         public void actionPerformed(ActionEvent e) {
             similarButtons.clear();
             JButton clickedButton = (JButton) e.getSource();
-            String commonButtonName = clickedButton.getName().substring(0,19);
-            String clickedButtonIndex = clickedButton.getName().substring(19);
-            int toRemoveIndex = Integer.parseInt(clickedButtonIndex);
-            System.out.println(commonButtonName);
-
-            if (commonButtonName.equals("removeProductButton")) {
-                System.out.println("yes");
-//                boolean toBeRemoved = false;
-//                int toRemoveIndex = 0;
-
+//            String commonButtonName = "";
+            String clickedButtonIndex;
+            int updateIndex;
+            Iterator iterator = productList.iterator();
+            if (clickedButton.getName().startsWith("removeProductButton")) {
+                boolean cartProductExists = false;
+//                commonButtonName = clickedButton.getName().substring(0,19);
+                clickedButtonIndex = clickedButton.getName().substring(19);
+                updateIndex = Integer.parseInt(clickedButtonIndex);
                 for (Component componentPanel : productPanel.getComponents()) {
                     if (componentPanel instanceof JPanel && componentPanel.getName() != null && (componentPanel.getName().equals("completeProductDescriptionPanel"))) {
                         JPanel completeProductDescriptionPanel = (JPanel) componentPanel;
@@ -367,40 +382,86 @@ public class ShoppingCart extends JFrame {
                         }
                     }
                 }
-                for (String similarButton : similarButtons) {
-                    System.out.println(similarButton);
+
+                for (int i = 0; i < similarButtons.size(); i++) {
+                    if (similarButtons.get(i).equals("removeProductButton" + clickedButtonIndex) && cartList.size() > 0) {
+                        while (iterator.hasNext()) {
+                            Product product = (Product) iterator.next();
+                            if ((product.getProductId().equals(cartList.get(updateIndex).getProductId()))) {
+                                int resetQuantity = cartList.get(updateIndex).getNumAvailableItems();
+                                cartProductExists = true;
+//                                cartList.remove(updateIndex);
+                                product.setNumAvailableItems(product.getNumAvailableItems() + resetQuantity);
+                            }
+                        }
+                    }
+                }
+                if (cartProductExists) {
+                    cartList.remove(updateIndex);
+                    updateProductPanel();
+                }
+
+            } else if (clickedButton.getName().startsWith("plus")) {
+//                commonButtonName = clickedButton.getName().substring(0,4);
+                clickedButtonIndex = clickedButton.getName().substring(4);
+                updateIndex = Integer.parseInt(clickedButtonIndex);
+                for (Component componentPanel : productPanel.getComponents()) {
+                    if (componentPanel instanceof JPanel && componentPanel.getName() != null && (componentPanel.getName().equals("quantityPanel"))) {
+                        JPanel quantityPanel = (JPanel) componentPanel;
+                        for (Component buttonComponent : quantityPanel.getComponents()) {
+                            if (buttonComponent instanceof JButton && buttonComponent.getName().startsWith("plus")) {
+                                JButton btn = (JButton) buttonComponent;
+                                String buttonName = btn.getName();
+                                similarButtons.add(buttonName);
+                            }
+                        }
+                    }
                 }
 
                 for (int i = 0; i < similarButtons.size(); i++) {
-                    if (similarButtons.get(i).equals("removeProductButton" + clickedButtonIndex)) {
-                        cartList.remove(toRemoveIndex);
-                        updateProductPanel();
+                    if (similarButtons.get(i).equals("plus" + clickedButtonIndex)) {
+//                        productList = WestminsterShoppingManager.getProductList();
+                        for (Product product : productList) {
+                            if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (product.getNumAvailableItems() > 0)) {
+                                cartList.get(updateIndex).setNumAvailableItems(cartList.get(updateIndex).getNumAvailableItems() + 1);
+                                product.setNumAvailableItems(product.getNumAvailableItems() - 1);
+                                cartList.get(updateIndex).setProductPrice(cartList.get(updateIndex).getNumAvailableItems() * product.getProductPrice());
+                                updateProductPanel();
+                            }
+                        }
+                    }
+                }
+            } else if (clickedButton.getName().startsWith("minus")) {
+//                commonButtonName = clickedButton.getName().substring(0,5);
+                clickedButtonIndex = clickedButton.getName().substring(5);
+                updateIndex = Integer.parseInt(clickedButtonIndex);
+                for (Component componentPanel : productPanel.getComponents()) {
+                    if (componentPanel instanceof JPanel && componentPanel.getName() != null && (componentPanel.getName().equals("quantityPanel"))) {
+                        JPanel quantityPanel = (JPanel) componentPanel;
+                        for (Component buttonComponent : quantityPanel.getComponents()) {
+                            if (buttonComponent instanceof JButton && buttonComponent.getName().startsWith("minus")) {
+                                JButton btn = (JButton) buttonComponent;
+                                String buttonName = btn.getName();
+                                similarButtons.add(buttonName);
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < similarButtons.size(); i++) {
+                    if (similarButtons.get(i).equals("minus" + clickedButtonIndex)) {
+//                        productList = WestminsterShoppingManager.getProductList();
+                        for (Product product : productList) {
+                            if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (cartList.get(updateIndex).getNumAvailableItems() > 0)) {
+                                cartList.get(updateIndex).setNumAvailableItems(cartList.get(updateIndex).getNumAvailableItems() - 1);
+                                product.setNumAvailableItems(product.getNumAvailableItems() + 1);
+                                cartList.get(updateIndex).setProductPrice(cartList.get(updateIndex).getNumAvailableItems() * product.getProductPrice());
+                                updateProductPanel();
+                            }
+                        }
                     }
                 }
             }
-
-//            if (text.equals()) {
-//                String buttonIndex = ((JButton) source).getName().substring(19);
-//                int integerButtonIndex = Integer.parseInt(buttonIndex);
-//                System.out.println(buttonIndex);
-//                boolean toBeRemoved = false;
-//                int toRemoveIndex = 0;
-//                for (int i = 0; i < cartList.size(); i++) {
-//                    if (i == integerButtonIndex) {
-//                        toBeRemoved = true;
-//                        toRemoveIndex = i;
-//                    }
-//                }
-//                if (toBeRemoved) {
-//                    cartList.remove(toRemoveIndex);
-//                    updateProductPanel();
-//                }
-//            }
-//             else if (source == plus) {
-//
-//            } else if (source == minus) {
-//
-//            }
         }
     }
 

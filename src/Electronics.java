@@ -23,6 +23,12 @@ public class Electronics extends Product {
         this.electronicWarrantyPeriod = electronicWarrantyPeriod;
     }
 
+    public Electronics(Product cartProduct) {
+        super(cartProduct);
+        this.electronicBrand = ((Electronics)cartProduct).getElectronicBrand();
+        this.electronicWarrantyPeriod = ((Electronics)cartProduct).getElectronicWarrantyPeriod();
+    }
+
     /**
      * getters and setters
      */

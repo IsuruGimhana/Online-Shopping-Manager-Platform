@@ -266,20 +266,35 @@ public class WestminsterShoppingCentre extends JFrame{
             } else if (source == addToCart) {
                 if (table.getSelectedRow() != -1) {
                     int selectedRow = table.getSelectedRow();
-                    Product product = productList.get(selectedRow);
+                    Product cartProduct;
+                    if (filteredProductList.get(selectedRow) instanceof Electronics) {
+                        cartProduct = new Electronics(filteredProductList.get(selectedRow));
+                        cartProduct.setNumAvailableItems(0);
+                    } else {
+                        cartProduct = new Clothing(filteredProductList.get(selectedRow));
+                        cartProduct.setNumAvailableItems(0);
+                    }
 //                    ShoppingCart shoppingCart = new ShoppingCart();
-                    if (shoppingCart.getCartList().size() == 0) {
-                        shoppingCart.addProduct(product);
+                    if ((shoppingCart.getCartList().size() == 0) && (filteredProductList.get(selectedRow).getNumAvailableItems() > 0)) {
+                        cartProduct.setNumAvailableItems(cartProduct.getNumAvailableItems() + 1);
+                        shoppingCart.addProduct(cartProduct);
+                        filteredProductList.get(selectedRow).setNumAvailableItems(filteredProductList.get(selectedRow).getNumAvailableItems() - 1);
+                        tableModel.setProductList(filteredProductList);
+                        tableModel.fireTableDataChanged();
                     } else {
                         boolean productExists = false;
                         for (int i = 0; i < shoppingCart.getCartList().size(); i++) {
-                            if (shoppingCart.getCartList().get(i).getProductId().equals(product.getProductId())) {
+                            if (shoppingCart.getCartList().get(i).getProductId().equals(filteredProductList.get(selectedRow).getProductId())) {
                                 productExists = true;
                                 break;
                             }
                         }
-                        if (!productExists) {
-                            shoppingCart.addProduct(product);
+                        if ((!productExists) && (filteredProductList.get(selectedRow).getNumAvailableItems() > 0)){
+                            cartProduct.setNumAvailableItems(cartProduct.getNumAvailableItems() + 1);
+                            shoppingCart.addProduct(cartProduct);
+                            filteredProductList.get(selectedRow).setNumAvailableItems(filteredProductList.get(selectedRow).getNumAvailableItems() - 1);
+                            tableModel.setProductList(filteredProductList);
+                            tableModel.fireTableDataChanged();
                         }
                     }
                 }

@@ -2,6 +2,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,13 +36,15 @@ public class WestminsterShoppingCentre extends JFrame{
         headerPanel = new JPanel();
         bodyPanel = new JPanel();
         footerPanel = new JPanel();
+        footerPanel.setBorder(BorderFactory.createMatteBorder(1,0,0,0,Color.BLACK));
+
         sortPanel = new JPanel();
         tablePanel = new JPanel();
 
-        headerPanel.setBackground(Color.BLACK);
-        bodyPanel.setBackground(Color.GRAY);
-        footerPanel.setBackground(Color.LIGHT_GRAY);
-        sortPanel.setBackground(Color.pink);
+//        headerPanel.setBackground(Color.BLACK);
+//        bodyPanel.setBackground(Color.GRAY);
+//        footerPanel.setBackground(Color.LIGHT_GRAY);
+//        sortPanel.setBackground(Color.pink);
 
 //        this.getContentPane().setLayout(new BorderLayout());
         this.getContentPane().setLayout(new GridLayout(2,1));
@@ -50,10 +55,11 @@ public class WestminsterShoppingCentre extends JFrame{
 //        this.getContentPane().add(footerPanel, BorderLayout.SOUTH);
 
         tablePanel.setLayout(new BorderLayout());
-        tablePanel.add(headerPanel, BorderLayout.NORTH);
-        tablePanel.add(bodyPanel, BorderLayout.CENTER);
         headerPanel.setLayout(new BorderLayout());
+        tablePanel.add(headerPanel, BorderLayout.NORTH);
         bodyPanel.setLayout(new GridLayout(1,1));
+        bodyPanel.setBorder(BorderFactory.createEmptyBorder(10,10,30,10));
+        tablePanel.add(bodyPanel, BorderLayout.CENTER);
 
 //header
         shoppingCartButton = new JButton("Shopping Cart");
@@ -61,41 +67,48 @@ public class WestminsterShoppingCentre extends JFrame{
         EventListener shoppingCartEventListener = new EventListener(shoppingCart);
         shoppingCartButton.addActionListener(shoppingCartEventListener);
 
-        headerPanel.add(sortPanel, BorderLayout.WEST);
-        headerPanel.add(shoppingCartButton, BorderLayout.EAST);
+//        sortPanel.setLayout(new BorderLayout(5,5));
+        sortPanel.setLayout(new FlowLayout());
+        sortPanel.setBorder(BorderFactory.createEmptyBorder(40,0,0,0));
 
-        sortPanel.setLayout(new BorderLayout(5,5));
-        sortPanel.setBorder(BorderFactory.createEmptyBorder(2,15,2,5));
         JPanel sortTypePanel = new JPanel();
         JPanel sortValue = new JPanel();
-        sortPanel.add(sortTypePanel, BorderLayout.WEST);
-        sortPanel.add(sortValue, BorderLayout.EAST);
-        sortTypePanel.setLayout(new GridLayout(2,1));
-        sortValue.setLayout(new GridLayout(2,1));
+//        sortPanel.add(sortTypePanel, BorderLayout.WEST);
+//        sortPanel.add(sortValue, BorderLayout.EAST);
 
-        JLabel category = new JLabel("Category");
-        sortTypePanel.add(category);
+        JPanel shoppingCartPanel = new JPanel(new GridLayout(1,1));
+        shoppingCartPanel.setBorder(BorderFactory.createEmptyBorder(0,0,20,10));
+        shoppingCartPanel.add(shoppingCartButton);
+        headerPanel.add(shoppingCartPanel, BorderLayout.EAST);
+//
+//        sortTypePanel.setLayout(new GridLayout(2,1));
+//        sortValue.setLayout(new GridLayout(2,1));
+
+        JLabel category = new JLabel("Select Product Category");
+        sortPanel.add(category);
         String[] productCategory = {"All", "Electronics", "Clothing"};
         categoryDropDown = new JComboBox(productCategory);
         categoryDropDown.setBorder(new EmptyBorder(5,0,0,0));
-        sortValue.add(categoryDropDown);
+        sortPanel.add(categoryDropDown);
+
+        headerPanel.add(sortPanel, BorderLayout.CENTER);
 
         EventListener categoryDropDownEventListener = new EventListener();
         categoryDropDown.addActionListener(categoryDropDownEventListener);
 
-        JLabel sort = new JLabel("Sort");
-        sortTypePanel.add(sort);
-        JPanel alphabeticalOrderPanel = new JPanel();
-        alphabeticalOrderPanel.setLayout(new FlowLayout());
-        ascendingOrder = new JCheckBox("a-z");
-        descendingOrder = new JCheckBox("z-a");
-        alphabeticalOrderPanel.add(ascendingOrder);
-        alphabeticalOrderPanel.add(descendingOrder);
-        sortValue.add(alphabeticalOrderPanel);
-
-        EventListener sortEventListener = new EventListener();
-        ascendingOrder.addActionListener(sortEventListener);
-        descendingOrder.addActionListener(sortEventListener);
+//        JLabel sort = new JLabel("Sort");
+//        sortTypePanel.add(sort);
+//        JPanel alphabeticalOrderPanel = new JPanel();
+//        alphabeticalOrderPanel.setLayout(new FlowLayout());
+//        ascendingOrder = new JCheckBox("a-z");
+//        descendingOrder = new JCheckBox("z-a");
+//        alphabeticalOrderPanel.add(ascendingOrder);
+//        alphabeticalOrderPanel.add(descendingOrder);
+//        sortValue.add(alphabeticalOrderPanel);
+//
+//        EventListener sortEventListener = new EventListener();
+//        ascendingOrder.addActionListener(sortEventListener);
+//        descendingOrder.addActionListener(sortEventListener);
 
         //table
 //        String[] columnNames = {"Product ID", "Name", "Category", "Price", "Info"};
@@ -119,17 +132,54 @@ public class WestminsterShoppingCentre extends JFrame{
 //        }
 //        TableModel tableModel = new DefaultTableModel(tableData, columnNames);
 //        JTable table = new JTable(tableModel);
-        tableModel = new ProductTableModel();
+        Collections.sort(productList);
         filteredProductList.addAll(productList);
-        tableModel.setProductList(filteredProductList);
+        tableModel = new ProductTableModel(filteredProductList);
+//        tableModel.setProductList(filteredProductList);
         JTable table = new JTable(tableModel);
+        JTableHeader tableHeader = table.getTableHeader();
+//        tableHeader.setBorder(BorderFactory.createMatteBorder(1,0,0,1,Color.BLACK));
+//        tableHeader.setReorderingAllowed(false);
+
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            tableHeader.getColumnModel().getColumn(i).setHeaderRenderer(new CustomTableCellRenderer());
+        }
+//        tableHeader.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK));
+//        tableHeader.setBackground(Color.WHITE);
+
+        //table header alignment
+//        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+//        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+//        renderer.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK));
+//        tableHeader.setReorderingAllowed(false);
+//        for (int i = 0; i < table.getColumnCount(); i++) {
+//            tableHeader.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK));
+//            tableHeader.getColumnModel().getColumn(i).setHeaderRenderer(renderer);
+//        }
+
+//            tableHeader = table.getTableHeader();
+//            TableColumn tableHeaderColumn = tableHeader.getColumnModel().getColumn(i);
+//            DefaultTableCellRenderer tableHeaderCellRenderer = (DefaultTableCellRenderer) tableHeaderColumn.getHeaderRenderer();
+//            tableHeaderCellRenderer.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK));
+
+//        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+//        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+//        tableHeader.setDefaultRenderer(renderer);
+//        TableColumn column = table.getColumnModel().getColumn(0);
+//        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) column.getHeaderRenderer();
+//        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+//        tableHeader.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         table.getTableHeader().setPreferredSize(new Dimension(200, 30));
         table.setRowHeight(30);
-        table.getTableHeader().setBackground(Color.LIGHT_GRAY);
-        table.setShowGrid(true);
-        table.setGridColor(Color.BLACK);
-        table.setShowVerticalLines(false);
+//        table.setBorder(BorderFactory.createMatteBorder(0,0,0,0,Color.BLACK));
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(new CustomTableCellRenderer());
+        }
+//        table.getTableHeader().setBackground(Color.LIGHT_GRAY);
+//        table.setShowGrid(true);
+//        table.setGridColor(Color.BLACK);
+//        table.setShowVerticalLines(false);
 
 //        table.getTableHeader().setBorder(BorderFactory.createLineBorder(Color.blue));
 //        table.setGridColor(Color.blue);
@@ -138,23 +188,37 @@ public class WestminsterShoppingCentre extends JFrame{
         table.getColumnModel().getColumn(2).setPreferredWidth(200);
         table.getColumnModel().getColumn(3).setPreferredWidth(200);
         table.getColumnModel().getColumn(4).setPreferredWidth(500);
+
+        EventListener tableEventListener = new EventListener(table);
+        table.getSelectionModel().addListSelectionListener(tableEventListener);
+
+//        table cell alignment
+//        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+//        cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+//        table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+
         JScrollPane tableScrollPane = new JScrollPane(table);
         bodyPanel.add(tableScrollPane);
 
         //footer
         footerPanel.setLayout(new BorderLayout());
-        JLabel detailsHeader = new JLabel("Selected Product Details");
+        JLabel detailsHeader = new JLabel("Selected Product - Details");
+        Font productDetailsFont = new Font("Arial", Font.BOLD,14);
+        detailsHeader.setFont(productDetailsFont);
+        detailsHeader.setBorder(BorderFactory.createEmptyBorder(10,50,0,0));
         footerPanel.add(detailsHeader, BorderLayout.NORTH);
-        EventListener tableEventListener = new EventListener(table);
-        table.getSelectionModel().addListSelectionListener(tableEventListener);
+
+//        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+//        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+//        tableHeader.setDefaultRenderer(renderer);
 
         //Add to cart button
         JPanel addToCartPanel = new JPanel();
         addToCartPanel.setLayout(new FlowLayout());
         addToCart = new JButton("Add to Cart");
         addToCart.setPreferredSize(new Dimension(150, 50));
-        footerPanel.add(addToCartPanel, BorderLayout.SOUTH);
         addToCartPanel.add(addToCart);
+        footerPanel.add(addToCartPanel, BorderLayout.SOUTH);
 //        ShoppingCart shoppingCart = new ShoppingCart();
         EventListener shoppingCartEventListener2 = new EventListener(table, shoppingCart);
         addToCart.addActionListener(shoppingCartEventListener2);
@@ -162,9 +226,19 @@ public class WestminsterShoppingCentre extends JFrame{
 
         infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(6,1));
+//        infoPanel.setBackground(Color.LIGHT_GRAY);
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10,50,0,0));
         footerPanel.add(infoPanel, BorderLayout.CENTER);
+    }
 
-
+    private class CustomTableCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
+            setHorizontalAlignment(SwingConstants.CENTER);
+            return this;
+        }
     }
     private class EventListener implements ListSelectionListener, ActionListener {
         private JTable table;
@@ -247,19 +321,21 @@ public class WestminsterShoppingCentre extends JFrame{
                         }
                     }
                 }
-                tableModel.setProductList(filteredProductList);
-                tableModel.fireTableDataChanged();
-
-            }else if (source == ascendingOrder) {
-                descendingOrder.setSelected(false);
+                // Sort product list automatically when category is changed
                 Collections.sort(filteredProductList);
                 tableModel.setProductList(filteredProductList);
                 tableModel.fireTableDataChanged();
-            } else if (source == descendingOrder) {
-                ascendingOrder.setSelected(false);
-                Collections.sort(filteredProductList, Collections.reverseOrder());
-                tableModel.setProductList(filteredProductList);
-                tableModel.fireTableDataChanged();
+
+//            }else if (source == ascendingOrder) {
+//                descendingOrder.setSelected(false);
+//                Collections.sort(filteredProductList);
+//                tableModel.setProductList(filteredProductList);
+//                tableModel.fireTableDataChanged();
+//            } else if (source == descendingOrder) {
+//                ascendingOrder.setSelected(false);
+//                Collections.sort(filteredProductList, Collections.reverseOrder());
+//                tableModel.setProductList(filteredProductList);
+//                tableModel.fireTableDataChanged();
 
             } else if (source == shoppingCartButton) {
                 shoppingCart.setVisible(true);

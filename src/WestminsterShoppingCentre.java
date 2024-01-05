@@ -142,7 +142,7 @@ public class WestminsterShoppingCentre extends JFrame{
 //        tableHeader.setReorderingAllowed(false);
 
         for (int i = 0; i < table.getColumnCount(); i++) {
-            tableHeader.getColumnModel().getColumn(i).setHeaderRenderer(new CustomTableCellRenderer());
+            tableHeader.getColumnModel().getColumn(i).setHeaderRenderer(new CustomTableHeaderCellRenderer());
         }
 //        tableHeader.setBorder(BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK));
 //        tableHeader.setBackground(Color.WHITE);
@@ -174,7 +174,7 @@ public class WestminsterShoppingCentre extends JFrame{
         table.setRowHeight(30);
 //        table.setBorder(BorderFactory.createMatteBorder(0,0,0,0,Color.BLACK));
         for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setCellRenderer(new CustomTableCellRenderer());
+            table.getColumnModel().getColumn(i).setCellRenderer(new CustomTableRowColourRenderer());
         }
 //        table.getTableHeader().setBackground(Color.LIGHT_GRAY);
 //        table.setShowGrid(true);
@@ -229,15 +229,38 @@ public class WestminsterShoppingCentre extends JFrame{
 //        infoPanel.setBackground(Color.LIGHT_GRAY);
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10,50,0,0));
         footerPanel.add(infoPanel, BorderLayout.CENTER);
+//        for (int i = 0; i < table.getColumnCount(); i++) {
+//            table.getColumnModel().getColumn(i).setCellRenderer(new CustomTableRowColourRenderer());
+//        }
+//        table.setDefaultRenderer(Object.class, new CustomTableRowColourRenderer());
     }
 
-    private class CustomTableCellRenderer extends DefaultTableCellRenderer {
+    private class CustomTableHeaderCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
-            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
             setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
             setHorizontalAlignment(SwingConstants.CENTER);
-            return this;
+            return renderer;
+        }
+    }
+
+    private class CustomTableRowColourRenderer extends DefaultTableCellRenderer {
+//        Color originalColor = null;
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+            Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
+            setHorizontalAlignment(SwingConstants.CENTER);
+            if (filteredProductList.get(row).getNumAvailableItems() < 3) {
+                renderer.setBackground(Color.RED);
+            } else {
+                renderer.setBackground(table.getBackground());
+            }
+            if (isSelected) {
+                renderer.setBackground(Color.GRAY);
+            }
+            return renderer;
         }
     }
     private class EventListener implements ListSelectionListener, ActionListener {

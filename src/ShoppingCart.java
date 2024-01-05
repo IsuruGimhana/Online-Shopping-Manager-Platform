@@ -143,10 +143,12 @@ public class ShoppingCart extends JFrame {
 
     String[] columnNames = {"Product", "Quantity", "Price"};
     JPanel productPanel;
+    JPanel footerPanel;
     JPanel completeProductDescriptionPanel;
     JButton removeProductButton;
     JButton plus;
     JButton minus;
+//    double totalCost = 0;
 
     public ShoppingCart() throws HeadlessException {
 //        this.cartList = new ArrayList<>();
@@ -158,7 +160,12 @@ public class ShoppingCart extends JFrame {
         productPanel = new JPanel();
         productPanel.setLayout(new GridLayout(cartList.size() + 1, 3));
         productPanel.setName("productPanel");
-        productPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        productPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+
+        // Final price panel
+        footerPanel = new JPanel();
+        footerPanel.setLayout(new BorderLayout());
+        footerPanel.setPreferredSize(new Dimension(400, 120));
 
         updateProductPanel();
 
@@ -221,17 +228,72 @@ public class ShoppingCart extends JFrame {
         this.getContentPane().add(scrollPane);
 
 
-        // Final price panel
-        JPanel footerPanel = new JPanel();
-        footerPanel.setLayout(new BorderLayout());
-        footerPanel.setPreferredSize(new Dimension(400, 120));
+//        JPanel leftFooterPanel = new JPanel();
+//        leftFooterPanel.setLayout(new GridLayout(4,1));
+//        JPanel rightFooterPanel = new JPanel();
+//        rightFooterPanel.setLayout(new GridLayout(4,1));
+//        JLabel totalLabel = new JLabel("Total: ");
+//        totalLabel.setHorizontalAlignment(JLabel.RIGHT);
+//        JLabel totalValueLabel = new JLabel(totalCost + "");
+//        totalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+//        JLabel firstPurchaseDiscountLabel = new JLabel("First purchase discount(10%): ");
+//        firstPurchaseDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
+//        JLabel firstPurchaseDiscountValueLabel = new JLabel("-0");
+//        firstPurchaseDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+//        JLabel sameCategoryDiscountLabel = new JLabel("Three Items in the same category discount(20%): ");
+//        sameCategoryDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
+//        JLabel sameCategoryDiscountValueLabel = new JLabel("-0");
+//        sameCategoryDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+//        JLabel finalTotalLabel = new JLabel("Final Total: ");
+//        finalTotalLabel.setHorizontalAlignment(JLabel.RIGHT);
+//        JLabel finalTotalValueLabel = new JLabel("0");
+//        finalTotalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+//
+//        leftFooterPanel.add(totalLabel);
+//        rightFooterPanel.add(totalValueLabel);
+//        leftFooterPanel.add(firstPurchaseDiscountLabel);
+//        rightFooterPanel.add(firstPurchaseDiscountValueLabel);
+//        leftFooterPanel.add(sameCategoryDiscountLabel);
+//        rightFooterPanel.add(sameCategoryDiscountValueLabel);
+//        leftFooterPanel.add(finalTotalLabel);
+//        rightFooterPanel.add(finalTotalValueLabel);
+//
+//        footerPanel.add(leftFooterPanel, BorderLayout.WEST);
+//        footerPanel.add(rightFooterPanel, BorderLayout.CENTER);
+
+//        updateFinalTotalPanel();
+
+        JPanel finalTotalPanel = new JPanel(new FlowLayout());
+        finalTotalPanel.add(footerPanel);
+        this.getContentPane().add(finalTotalPanel);
+    }
+
+    public void updateFinalTotalPanel() {
+        footerPanel.removeAll();
+        double totalCost = 0;
+        int clothingCount = 0;
+        int electronicsCount = 0;
+        double sameCategoryDiscount = 0;
+        for (int i = 0 ; i < cartList.size() ; i++) {
+            totalCost += cartList.get(i).getProductPrice();
+            if (cartList.get(i) instanceof Electronics) {
+                electronicsCount++;
+            } else {
+                clothingCount++;
+            }
+        }
+        if (electronicsCount >= 3 || clothingCount >= 3) {
+            sameCategoryDiscount = totalCost * 0.2;
+        }
+//        BorderLayout exsistingLayout = (BorderLayout) footerPanel.getLayout();
         JPanel leftFooterPanel = new JPanel();
         leftFooterPanel.setLayout(new GridLayout(4,1));
         JPanel rightFooterPanel = new JPanel();
         rightFooterPanel.setLayout(new GridLayout(4,1));
         JLabel totalLabel = new JLabel("Total: ");
         totalLabel.setHorizontalAlignment(JLabel.RIGHT);
-        JLabel totalValueLabel = new JLabel("0");
+
+        JLabel totalValueLabel = new JLabel(totalCost + "");
         totalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel firstPurchaseDiscountLabel = new JLabel("First purchase discount(10%): ");
         firstPurchaseDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -239,7 +301,7 @@ public class ShoppingCart extends JFrame {
         firstPurchaseDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel sameCategoryDiscountLabel = new JLabel("Three Items in the same category discount(20%): ");
         sameCategoryDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
-        JLabel sameCategoryDiscountValueLabel = new JLabel("-0");
+        JLabel sameCategoryDiscountValueLabel = new JLabel("-" + sameCategoryDiscount);
         sameCategoryDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel finalTotalLabel = new JLabel("Final Total: ");
         finalTotalLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -258,11 +320,9 @@ public class ShoppingCart extends JFrame {
         footerPanel.add(leftFooterPanel, BorderLayout.WEST);
         footerPanel.add(rightFooterPanel, BorderLayout.CENTER);
 
-        JPanel finalTotalPanel = new JPanel(new FlowLayout());
-        finalTotalPanel.add(footerPanel);
-        this.getContentPane().add(finalTotalPanel);
+        footerPanel.revalidate();
+        footerPanel.repaint();
     }
-
     public void updateProductPanel() {
         GridLayout exsistingLayout = (GridLayout) productPanel.getLayout();
         exsistingLayout.setRows(cartList.size() + 1);
@@ -272,7 +332,22 @@ public class ShoppingCart extends JFrame {
             header.setOpaque(true);
             header.setBackground(Color.LIGHT_GRAY);
             header.setPreferredSize(new Dimension(250,60));
-            header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            if (cartList.size() == 0) {
+                if (columnName.equals("Product")) {
+                    header.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
+                } else if (columnName.equals("Price")) {
+                    header.setBorder(BorderFactory.createMatteBorder(0,1,0,0,Color.BLACK));
+                }
+            } else {
+                if (columnName.equals("Product")) {
+                    header.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
+                } else if (columnName.equals("Price")) {
+                    header.setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
+                }else {
+                    header.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK));
+                }
+            }
+//            header.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
             header.setHorizontalAlignment(JLabel.CENTER);
             productPanel.add(header);
         }
@@ -300,7 +375,13 @@ public class ShoppingCart extends JFrame {
             productDescriptionPanel.add(temp);
             completeProductDescriptionPanel = new JPanel(new FlowLayout());
             completeProductDescriptionPanel.setName("completeProductDescriptionPanel");
-            completeProductDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            if (i == cartList.size() - 1) {
+                completeProductDescriptionPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
+            } else {
+                completeProductDescriptionPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
+            }
+//            completeProductDescriptionPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
+//            completeProductDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
 //            completeProductDescriptionPanel.setPreferredSize(new Dimension(250, 60));
             removeProductButton = new JButton("-");
             //Set the button name
@@ -318,13 +399,23 @@ public class ShoppingCart extends JFrame {
 
             String formattedProductPrice = String.format("%.2f", cartList.get(i).getProductPrice());
             JLabel productPrice = new JLabel(formattedProductPrice + " LKR");
-            productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            if (i == cartList.size() - 1)
+                productPrice.setBorder(BorderFactory.createMatteBorder(0,1,0,0,Color.BLACK));
+            else
+                productPrice.setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
+//            productPrice.setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
+//            productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
             productPrice.setPreferredSize(new Dimension(250, 60));
             productPrice.setHorizontalAlignment(JLabel.CENTER);
             JPanel quantityPanel = new JPanel();
             quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
             quantityPanel.setName("quantityPanel");
-            quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            if (i == cartList.size() - 1)
+                quantityPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,0,Color.BLACK));
+            else
+                quantityPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK));
+//            quantityPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK));
+//            quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
             quantityPanel.setPreferredSize(new Dimension(250, 60));
 
             plus = new JButton("+");
@@ -345,7 +436,9 @@ public class ShoppingCart extends JFrame {
             productPanel.add(completeProductDescriptionPanel);
             productPanel.add(quantityPanel);
             productPanel.add(productPrice);
+
         }
+        updateFinalTotalPanel();
         productPanel.revalidate();
         productPanel.repaint();
     }

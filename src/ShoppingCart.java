@@ -263,8 +263,16 @@ public class ShoppingCart extends JFrame {
 
 //        updateFinalTotalPanel();
 
-        JPanel finalTotalPanel = new JPanel(new FlowLayout());
-        finalTotalPanel.add(footerPanel);
+//        JPanel finalTotalPanel = new JPanel(new FlowLayout());
+        JPanel finalTotalPanel = new JPanel(new BorderLayout());
+        JPanel flowLayoutBuyButtonPanel = new JPanel(new FlowLayout());
+        JButton buyButton = new JButton("Buy");
+        buyButton.setPreferredSize(new Dimension(150, 50));
+        flowLayoutBuyButtonPanel.add(buyButton);
+        JPanel flowLayoutFinalFooterPanel = new JPanel(new FlowLayout());
+        flowLayoutFinalFooterPanel.add(footerPanel);
+        finalTotalPanel.add(flowLayoutFinalFooterPanel, BorderLayout.CENTER);
+        finalTotalPanel.add(flowLayoutBuyButtonPanel, BorderLayout.SOUTH);
         this.getContentPane().add(finalTotalPanel);
     }
 

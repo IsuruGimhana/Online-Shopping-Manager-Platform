@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * This class represents the user account
  *
@@ -5,6 +7,7 @@
  */
 public class User {
     // instance variables
+    private static ArrayList<Product> purchasedProductList; // the list of purchased products
     private String userName; // user name
     private String userPassword; // user password
 
@@ -14,6 +17,7 @@ public class User {
      * @param userPassword - the user password
      */
     public User(String userName, String userPassword){
+        this.purchasedProductList = new ArrayList<>();
         this.userName = userName;
         this.userPassword = userPassword;
     }
@@ -34,5 +38,12 @@ public class User {
     }
     public void setUserPassword(String userPassword){
         this.userPassword = userPassword;
+    }
+
+    public ArrayList<Product> getPurchasedProductList() {
+        return purchasedProductList;
+    }
+    public void setPurchasedProductList(ArrayList<Product> purchasedProductList) {
+        this.purchasedProductList = purchasedProductList;
     }
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class WestminsterShoppingCentre extends JFrame{
+    private User user;
     private ArrayList<Product> productList;
     private ArrayList<Product> filteredProductList;
     private ProductTableModel tableModel;
@@ -28,6 +29,7 @@ public class WestminsterShoppingCentre extends JFrame{
     private JButton addToCart;
 
     public WestminsterShoppingCentre() throws HeadlessException {
+        user = new User("Isuru", "1234");
         productList = WestminsterShoppingManager.getProductList();
         filteredProductList = new ArrayList<>();
         setTitle("Westminster Shopping Centre");
@@ -63,9 +65,9 @@ public class WestminsterShoppingCentre extends JFrame{
 
 //header
         shoppingCartButton = new JButton("Shopping Cart");
-        ShoppingCart shoppingCart = new ShoppingCart();
-        EventListener shoppingCartEventListener = new EventListener(shoppingCart);
-        shoppingCartButton.addActionListener(shoppingCartEventListener);
+//        ShoppingCart shoppingCart = new ShoppingCart(user, infoPanel);
+//        EventListener shoppingCartEventListener = new EventListener(shoppingCart);
+//        shoppingCartButton.addActionListener(shoppingCartEventListener);
 
 //        sortPanel.setLayout(new BorderLayout(5,5));
         sortPanel.setLayout(new FlowLayout());
@@ -220,20 +222,69 @@ public class WestminsterShoppingCentre extends JFrame{
         addToCartPanel.add(addToCart);
         footerPanel.add(addToCartPanel, BorderLayout.SOUTH);
 //        ShoppingCart shoppingCart = new ShoppingCart();
-        EventListener shoppingCartEventListener2 = new EventListener(table, shoppingCart);
-        addToCart.addActionListener(shoppingCartEventListener2);
-
 
         infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(6,1));
 //        infoPanel.setBackground(Color.LIGHT_GRAY);
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10,50,0,0));
         footerPanel.add(infoPanel, BorderLayout.CENTER);
+
+        ShoppingCart shoppingCart = new ShoppingCart(user, infoPanel);
+        EventListener shoppingCartEventListener = new EventListener(shoppingCart);
+        shoppingCartButton.addActionListener(shoppingCartEventListener);
+
+        EventListener shoppingCartEventListener2 = new EventListener(table, shoppingCart);
+        addToCart.addActionListener(shoppingCartEventListener2);
+
+
 //        for (int i = 0; i < table.getColumnCount(); i++) {
 //            table.getColumnModel().getColumn(i).setCellRenderer(new CustomTableRowColourRenderer());
 //        }
 //        table.setDefaultRenderer(Object.class, new CustomTableRowColourRenderer());
     }
+
+    public void updateInfoPanel(Product product) {
+        GridLayout existingLayout = (GridLayout) infoPanel.getLayout();
+        existingLayout.setRows(6);
+        infoPanel.removeAll();
+        String productId = product.getProductId();
+        String productName = product.getProductName();
+        int numAvailableItems = product.getNumAvailableItems();
+        double productPrice = product.getProductPrice();
+        String formattedProductPrice = String.format("%.2f", productPrice);
+        JLabel productIdLabel = new JLabel("Product ID: " + productId);
+        infoPanel.add(productIdLabel);
+        JLabel productNameLabel = new JLabel("Product Name: " + productName);
+        infoPanel.add(productNameLabel);
+        JLabel availableItemsLabel = new JLabel("Number of Available Items: " + numAvailableItems);
+        infoPanel.add(availableItemsLabel);
+        JLabel productPriceLabel = new JLabel("Product Price: " + formattedProductPrice + " LKR");
+        infoPanel.add(productPriceLabel);
+        if (product instanceof Electronics) {
+            Electronics electronics = (Electronics) product;
+            String electronicBrand = electronics.getElectronicBrand();
+            int electronicWarrantyPeriod = electronics.getElectronicWarrantyPeriod();
+            JLabel electronicBrandLabel = new JLabel("Electronic Brand: " + electronicBrand);
+            infoPanel.add(electronicBrandLabel);
+            JLabel electronicWarrantyPeriodLabel = new JLabel("Electronic Warranty Period: " + electronicWarrantyPeriod);
+            infoPanel.add(electronicWarrantyPeriodLabel);
+        } else if (product instanceof Clothing) {
+            Clothing clothing = (Clothing) product;
+            String clothingSize = clothing.getClothingSize();
+            String clothingColour = clothing.getClothingColour();
+            JLabel clothingSizeLabel = new JLabel("Clothing Size: " + clothingSize);
+            infoPanel.add(clothingSizeLabel);
+            JLabel clothingColourLabel = new JLabel("Clothing Colour: " + clothingColour);
+            infoPanel.add(clothingColourLabel);
+        }
+        infoPanel.revalidate();
+        infoPanel.repaint();
+    }
+
+    //make the westminster shopping centre frame invisible
+//    public void makeShoppingCartFrameInvisible() {
+//        this.setVisible(false);
+//    }
 
     private class CustomTableHeaderCellRenderer extends DefaultTableCellRenderer {
         @Override
@@ -284,40 +335,40 @@ public class WestminsterShoppingCentre extends JFrame{
                 int selectedRow = table.getSelectedRow();//get the selected row
 //                productList = WestminsterShoppingManager.getProductList();
                 Product product = productList.get(selectedRow);//get the product object from the productList using the selected row
+                updateInfoPanel(product);
 
-                infoPanel.removeAll();
-
-                String productId = product.getProductId();
-                String productName = product.getProductName();
-                int numAvailableItems = product.getNumAvailableItems();
-                double productPrice = product.getProductPrice();
-                String formattedProductPrice = String.format("%.2f", productPrice);
-                JLabel productIdLabel = new JLabel("Product ID: " + productId);
-                infoPanel.add(productIdLabel);
-                JLabel productNameLabel = new JLabel("Product Name: " + productName);
-                infoPanel.add(productNameLabel);
-                JLabel availableItemsLabel = new JLabel("Number of Available Items: " + numAvailableItems);
-                infoPanel.add(availableItemsLabel);
-                JLabel productPriceLabel = new JLabel("Product Price: " + formattedProductPrice + " LKR");
-                infoPanel.add(productPriceLabel);
-                if (product instanceof Electronics) {
-                    Electronics electronics = (Electronics) product;
-                    String electronicBrand = electronics.getElectronicBrand();
-                    int electronicWarrantyPeriod = electronics.getElectronicWarrantyPeriod();
-                    JLabel electronicBrandLabel = new JLabel("Electronic Brand: " + electronicBrand);
-                    infoPanel.add(electronicBrandLabel);
-                    JLabel electronicWarrantyPeriodLabel = new JLabel("Electronic Warranty Period: " + electronicWarrantyPeriod);
-                    infoPanel.add(electronicWarrantyPeriodLabel);
-                } else if (product instanceof Clothing) {
-                    Clothing clothing = (Clothing) product;
-                    String clothingSize = clothing.getClothingSize();
-                    String clothingColour = clothing.getClothingColour();
-                    JLabel clothingSizeLabel = new JLabel("Clothing Size: " + clothingSize);
-                    infoPanel.add(clothingSizeLabel);
-                    JLabel clothingColourLabel = new JLabel("Clothing Colour: " + clothingColour);
-                    infoPanel.add(clothingColourLabel);
-                }
-                infoPanel.revalidate();
+//                infoPanel.removeAll();
+//                String productId = product.getProductId();
+//                String productName = product.getProductName();
+//                int numAvailableItems = product.getNumAvailableItems();
+//                double productPrice = product.getProductPrice();
+//                String formattedProductPrice = String.format("%.2f", productPrice);
+//                JLabel productIdLabel = new JLabel("Product ID: " + productId);
+//                infoPanel.add(productIdLabel);
+//                JLabel productNameLabel = new JLabel("Product Name: " + productName);
+//                infoPanel.add(productNameLabel);
+//                JLabel availableItemsLabel = new JLabel("Number of Available Items: " + numAvailableItems);
+//                infoPanel.add(availableItemsLabel);
+//                JLabel productPriceLabel = new JLabel("Product Price: " + formattedProductPrice + " LKR");
+//                infoPanel.add(productPriceLabel);
+//                if (product instanceof Electronics) {
+//                    Electronics electronics = (Electronics) product;
+//                    String electronicBrand = electronics.getElectronicBrand();
+//                    int electronicWarrantyPeriod = electronics.getElectronicWarrantyPeriod();
+//                    JLabel electronicBrandLabel = new JLabel("Electronic Brand: " + electronicBrand);
+//                    infoPanel.add(electronicBrandLabel);
+//                    JLabel electronicWarrantyPeriodLabel = new JLabel("Electronic Warranty Period: " + electronicWarrantyPeriod);
+//                    infoPanel.add(electronicWarrantyPeriodLabel);
+//                } else if (product instanceof Clothing) {
+//                    Clothing clothing = (Clothing) product;
+//                    String clothingSize = clothing.getClothingSize();
+//                    String clothingColour = clothing.getClothingColour();
+//                    JLabel clothingSizeLabel = new JLabel("Clothing Size: " + clothingSize);
+//                    infoPanel.add(clothingSizeLabel);
+//                    JLabel clothingColourLabel = new JLabel("Clothing Colour: " + clothingColour);
+//                    infoPanel.add(clothingColourLabel);
+//                }
+//                infoPanel.revalidate();
             }
         }
 
@@ -361,11 +412,17 @@ public class WestminsterShoppingCentre extends JFrame{
 //                tableModel.fireTableDataChanged();
 
             } else if (source == shoppingCartButton) {
+//                this.setVisible(false);
                 shoppingCart.setVisible(true);
+//                makeShoppingCartFrameInvisible();
             } else if (source == addToCart) {
                 if (table.getSelectedRow() != -1) {
                     int selectedRow = table.getSelectedRow();
                     Product cartProduct;
+                    if (filteredProductList.get(selectedRow).getNumAvailableItems() <= 0) {
+                        JOptionPane.showMessageDialog(null, "Sold out! Please select a different product.");
+                        return;
+                    }
                     if (filteredProductList.get(selectedRow) instanceof Electronics) {
                         cartProduct = new Electronics(filteredProductList.get(selectedRow));
                         cartProduct.setNumAvailableItems(0);
@@ -377,9 +434,9 @@ public class WestminsterShoppingCentre extends JFrame{
                     if ((shoppingCart.getCartList().size() == 0) && (filteredProductList.get(selectedRow).getNumAvailableItems() > 0)) {
                         cartProduct.setNumAvailableItems(cartProduct.getNumAvailableItems() + 1);
                         shoppingCart.addProduct(cartProduct);
-                        filteredProductList.get(selectedRow).setNumAvailableItems(filteredProductList.get(selectedRow).getNumAvailableItems() - 1);
-                        tableModel.setProductList(filteredProductList);
-                        tableModel.fireTableDataChanged();
+//                        filteredProductList.get(selectedRow).setNumAvailableItems(filteredProductList.get(selectedRow).getNumAvailableItems() - 1);
+//                        tableModel.setProductList(filteredProductList);
+//                        tableModel.fireTableDataChanged();
                     } else {
                         boolean productExists = false;
                         for (int i = 0; i < shoppingCart.getCartList().size(); i++) {
@@ -391,9 +448,9 @@ public class WestminsterShoppingCentre extends JFrame{
                         if ((!productExists) && (filteredProductList.get(selectedRow).getNumAvailableItems() > 0)){
                             cartProduct.setNumAvailableItems(cartProduct.getNumAvailableItems() + 1);
                             shoppingCart.addProduct(cartProduct);
-                            filteredProductList.get(selectedRow).setNumAvailableItems(filteredProductList.get(selectedRow).getNumAvailableItems() - 1);
-                            tableModel.setProductList(filteredProductList);
-                            tableModel.fireTableDataChanged();
+//                            filteredProductList.get(selectedRow).setNumAvailableItems(filteredProductList.get(selectedRow).getNumAvailableItems() - 1);
+//                            tableModel.setProductList(filteredProductList);
+//                            tableModel.fireTableDataChanged();
                         }
                     }
                 }

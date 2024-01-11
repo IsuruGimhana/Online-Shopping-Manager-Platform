@@ -136,7 +136,9 @@ import java.util.Iterator;
 //    }
 
 public class ShoppingCart extends JFrame {
-    private ArrayList<Product> cartList = new ArrayList<>();
+    User user;
+    JPanel productInfoPanel;
+    private ArrayList<Product> cartList;
 //    {{
 //        add(new Electronics("E001", "iPhone 12", 10, 200000, "Apple", 12));
 //        add(new Clothing("C001", "T-Shirt", 20, 1000, "M", "Red"));}};
@@ -150,11 +152,15 @@ public class ShoppingCart extends JFrame {
     JButton minus;
 //    double totalCost = 0;
 
-    public ShoppingCart() throws HeadlessException {
+    public ShoppingCart(User user, JPanel productInfoPanel) throws HeadlessException {
+        this.productInfoPanel = productInfoPanel;
+        this.user = user;
+        cartList = new ArrayList<>();
 //        this.cartList = new ArrayList<>();
         setTitle("Shopping Cart");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
 
         this.getContentPane().setLayout(new GridLayout(2,1));
         productPanel = new JPanel();
@@ -267,6 +273,10 @@ public class ShoppingCart extends JFrame {
         JPanel finalTotalPanel = new JPanel(new BorderLayout());
         JPanel flowLayoutBuyButtonPanel = new JPanel(new FlowLayout());
         JButton buyButton = new JButton("Buy");
+        buyButton.setName("buyButton");
+        EventListener buyButtonListener = new EventListener();
+        buyButton.addActionListener(buyButtonListener);
+
         buyButton.setPreferredSize(new Dimension(150, 50));
         flowLayoutBuyButtonPanel.add(buyButton);
         JPanel flowLayoutFinalFooterPanel = new JPanel(new FlowLayout());
@@ -281,7 +291,9 @@ public class ShoppingCart extends JFrame {
         double totalCost = 0;
         int clothingCount = 0;
         int electronicsCount = 0;
-        double sameCategoryDiscount = 0;
+        String formattedTotal = "0";
+        String sameCategoryDiscount = "0";
+        String firstPurchaseDiscount = "0";
         for (int i = 0 ; i < cartList.size() ; i++) {
             totalCost += cartList.get(i).getProductPrice();
             if (cartList.get(i) instanceof Electronics) {
@@ -290,8 +302,12 @@ public class ShoppingCart extends JFrame {
                 clothingCount++;
             }
         }
+        formattedTotal = String.format("%.2f", totalCost);
         if (electronicsCount >= 3 || clothingCount >= 3) {
-            sameCategoryDiscount = totalCost * 0.2;
+            sameCategoryDiscount = String.format("%.2f", totalCost * 0.2);
+        }
+        if (user.getPurchasedProductList().size() == 0) {
+            firstPurchaseDiscount = String.format("%.2f", totalCost * 0.1);
         }
 //        BorderLayout exsistingLayout = (BorderLayout) footerPanel.getLayout();
         JPanel leftFooterPanel = new JPanel();
@@ -301,11 +317,11 @@ public class ShoppingCart extends JFrame {
         JLabel totalLabel = new JLabel("Total: ");
         totalLabel.setHorizontalAlignment(JLabel.RIGHT);
 
-        JLabel totalValueLabel = new JLabel(totalCost + "");
+        JLabel totalValueLabel = new JLabel(formattedTotal + "");
         totalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel firstPurchaseDiscountLabel = new JLabel("First purchase discount(10%): ");
         firstPurchaseDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
-        JLabel firstPurchaseDiscountValueLabel = new JLabel("-0");
+        JLabel firstPurchaseDiscountValueLabel = new JLabel("-" + firstPurchaseDiscount);
         firstPurchaseDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel sameCategoryDiscountLabel = new JLabel("Three Items in the same category discount(20%): ");
         sameCategoryDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
@@ -313,7 +329,8 @@ public class ShoppingCart extends JFrame {
         sameCategoryDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel finalTotalLabel = new JLabel("Final Total: ");
         finalTotalLabel.setHorizontalAlignment(JLabel.RIGHT);
-        JLabel finalTotalValueLabel = new JLabel("0");
+        String finalTotal = String.format("%.2f", totalCost - Double.parseDouble(firstPurchaseDiscount) - Double.parseDouble(sameCategoryDiscount));
+        JLabel finalTotalValueLabel = new JLabel(finalTotal+ "");
         finalTotalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
 
         leftFooterPanel.add(totalLabel);
@@ -523,11 +540,13 @@ public class ShoppingCart extends JFrame {
                     if (similarButtons.get(i).equals("plus" + clickedButtonIndex)) {
 //                        productList = WestminsterShoppingManager.getProductList();
                         for (Product product : productList) {
-                            if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (product.getNumAvailableItems() > 0)) {
+                            if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (product.getNumAvailableItems() > cartList.get(updateIndex).getNumAvailableItems())) {
                                 cartList.get(updateIndex).setNumAvailableItems(cartList.get(updateIndex).getNumAvailableItems() + 1);
-                                product.setNumAvailableItems(product.getNumAvailableItems() - 1);
+//                                product.setNumAvailableItems(product.getNumAvailableItems() - 1);
                                 cartList.get(updateIndex).setProductPrice(cartList.get(updateIndex).getNumAvailableItems() * product.getProductPrice());
                                 updateProductPanel();
+                            } else if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (product.getNumAvailableItems() == cartList.get(updateIndex).getNumAvailableItems())) {
+                                JOptionPane.showMessageDialog(null, "Not enough items available");
                             }
                         }
                     }
@@ -555,12 +574,36 @@ public class ShoppingCart extends JFrame {
                         for (Product product : productList) {
                             if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (cartList.get(updateIndex).getNumAvailableItems() > 0)) {
                                 cartList.get(updateIndex).setNumAvailableItems(cartList.get(updateIndex).getNumAvailableItems() - 1);
-                                product.setNumAvailableItems(product.getNumAvailableItems() + 1);
+//                                product.setNumAvailableItems(product.getNumAvailableItems() + 1);
                                 cartList.get(updateIndex).setProductPrice(cartList.get(updateIndex).getNumAvailableItems() * product.getProductPrice());
                                 updateProductPanel();
                             }
                         }
                     }
+                }
+            } else if (clickedButton.getName().equals("buyButton")) {
+                if (cartList.size() == 0) {
+                    JOptionPane.showMessageDialog(null, "Cart is empty");
+                } else {
+                    user.getPurchasedProductList().addAll(cartList);
+                    JOptionPane.showMessageDialog(null, "Purchase successful");
+
+                    // Update the product list
+                    for (Product cartProduct : cartList) {
+                        for (Product product : productList) {
+                            if (cartProduct.getProductId().equals(product.getProductId())) {
+                                product.setNumAvailableItems(product.getNumAvailableItems() - cartProduct.getNumAvailableItems());
+                            }
+                        }
+                    }
+                    // Update the user cart list
+                    cartList.clear();
+
+                    // Update the product panel
+                    updateProductPanel();
+                    productInfoPanel.removeAll();
+                    productInfoPanel.revalidate();
+                    productInfoPanel.repaint();
                 }
             }
         }

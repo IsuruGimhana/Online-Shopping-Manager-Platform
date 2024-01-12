@@ -3,6 +3,7 @@
  *
  * @author Isuru Gimhana
  */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +16,6 @@ public class ShoppingCart extends JFrame {
     private ArrayList<Product> cartList; // the list of products in the cart
     User user;
     JPanel productInfoPanel;
-
     String[] columnNames = {"Product", "Quantity", "Price"};
     JPanel productPanel;
     JPanel footerPanel;
@@ -25,7 +25,7 @@ public class ShoppingCart extends JFrame {
     JButton minus;
 
     /**
-     * Constructs a new shopping cart object
+     * Shopping cart constructor
      * @param user - the user
      * @param productInfoPanel - the product info panel
      */
@@ -73,6 +73,9 @@ public class ShoppingCart extends JFrame {
         this.getContentPane().add(finalTotalPanel);
     }
 
+    /**
+     * This method updates the final total panel
+     */
     public void updateFinalTotalPanel() {
         footerPanel.removeAll();
         double totalCost = 0;
@@ -81,6 +84,7 @@ public class ShoppingCart extends JFrame {
         String formattedTotal = "0";
         String sameCategoryDiscount = "0";
         String firstPurchaseDiscount = "0";
+
         for (int i = 0 ; i < cartList.size() ; i++) {
             totalCost += cartList.get(i).getProductPrice();
             if (cartList.get(i) instanceof Electronics) {
@@ -101,19 +105,26 @@ public class ShoppingCart extends JFrame {
         leftFooterPanel.setLayout(new GridLayout(4,1));
         JPanel rightFooterPanel = new JPanel();
         rightFooterPanel.setLayout(new GridLayout(4,1));
+
+        // Total price
         JLabel totalLabel = new JLabel("Total: ");
         totalLabel.setHorizontalAlignment(JLabel.RIGHT);
-
         JLabel totalValueLabel = new JLabel(formattedTotal + "");
         totalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+        // First purchase discount
         JLabel firstPurchaseDiscountLabel = new JLabel("First purchase discount(10%): ");
         firstPurchaseDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel firstPurchaseDiscountValueLabel = new JLabel("-" + firstPurchaseDiscount);
         firstPurchaseDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+        // Same category discount
         JLabel sameCategoryDiscountLabel = new JLabel("Three Items in the same category discount(20%): ");
         sameCategoryDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
         JLabel sameCategoryDiscountValueLabel = new JLabel("-" + sameCategoryDiscount);
         sameCategoryDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+        // Final total
         JLabel finalTotalLabel = new JLabel("Final Total: ");
         finalTotalLabel.setHorizontalAlignment(JLabel.RIGHT);
         String finalTotal = String.format("%.2f", totalCost - Double.parseDouble(firstPurchaseDiscount) - Double.parseDouble(sameCategoryDiscount));
@@ -135,6 +146,10 @@ public class ShoppingCart extends JFrame {
         footerPanel.revalidate();
         footerPanel.repaint();
     }
+
+    /**
+     * This method updates the product panel
+     */
     public void updateProductPanel() {
         GridLayout exsistingLayout = (GridLayout) productPanel.getLayout();
         exsistingLayout.setRows(cartList.size() + 1);
@@ -167,6 +182,7 @@ public class ShoppingCart extends JFrame {
             JPanel productDescriptionPanel = new JPanel();
             productDescriptionPanel.setLayout(new GridLayout(3,1));
             productDescriptionPanel.setPreferredSize(new Dimension(200,60));
+
             JLabel prductId = new JLabel(cartList.get(i).getProductId());
             prductId.setHorizontalAlignment(JLabel.CENTER);
             JLabel productName = new JLabel(cartList.get(i).getProductName());
@@ -180,9 +196,11 @@ public class ShoppingCart extends JFrame {
                 temp = new JLabel(clothing.getClothingSize() + ", " + clothing.getClothingColour());
             }
             temp.setHorizontalAlignment(JLabel.CENTER);
+
             productDescriptionPanel.add(prductId);
             productDescriptionPanel.add(productName);
             productDescriptionPanel.add(temp);
+
             completeProductDescriptionPanel = new JPanel(new FlowLayout());
             completeProductDescriptionPanel.setName("completeProductDescriptionPanel");
             if (i == cartList.size() - 1) {
@@ -190,9 +208,12 @@ public class ShoppingCart extends JFrame {
             } else {
                 completeProductDescriptionPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
             }
+
+            //remove product button
             removeProductButton = new JButton("-");
             removeProductButton.setName("removeProductButton" + i);
 
+            // event listener for the remove product button
             EventListener removeProductListener = new EventListener();
             removeProductButton.addActionListener(removeProductListener);
 
@@ -203,6 +224,7 @@ public class ShoppingCart extends JFrame {
             JLabel defaultProductQuantity = new JLabel(cartList.get(i).getNumAvailableItems() + "");
             defaultProductQuantity.setName("defaultProductQuantity" + i);
 
+            //product price label
             String formattedProductPrice = String.format("%.2f", cartList.get(i).getProductPrice());
             JLabel productPrice = new JLabel(formattedProductPrice + " LKR");
             if (i == cartList.size() - 1)
@@ -212,6 +234,8 @@ public class ShoppingCart extends JFrame {
 
             productPrice.setPreferredSize(new Dimension(250, 60));
             productPrice.setHorizontalAlignment(JLabel.CENTER);
+
+            //quantity panel
             JPanel quantityPanel = new JPanel();
             quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
             quantityPanel.setName("quantityPanel");
@@ -224,19 +248,25 @@ public class ShoppingCart extends JFrame {
 
             plus = new JButton("+");
             plus.setName("plus" + i);
+
+            // event listener for increase quantity button
             EventListener increaseQuantityListener = new EventListener();
             plus.addActionListener(increaseQuantityListener);
 
             minus = new JButton("-");
             minus.setName("minus" + i);
+
+            // event listener for reduce quantity button
             EventListener decreaseQuantityListener = new EventListener();
             minus.addActionListener(decreaseQuantityListener);
 
             plus.setPreferredSize(new Dimension(20, 20));
             minus.setPreferredSize(new Dimension(20, 20));
+
             quantityPanel.add(minus);
             quantityPanel.add(defaultProductQuantity);
             quantityPanel.add(plus);
+
             productPanel.add(completeProductDescriptionPanel);
             productPanel.add(quantityPanel);
             productPanel.add(productPrice);
@@ -247,6 +277,9 @@ public class ShoppingCart extends JFrame {
         productPanel.repaint();
     }
 
+    /**
+     * This class represents the event listener
+     */
     private class EventListener implements ActionListener {
         private ArrayList<Product> productList;
         private ArrayList<String> similarButtons;
@@ -379,6 +412,9 @@ public class ShoppingCart extends JFrame {
         }
     }
 
+    /**
+     * getters and setters
+     */
     public ArrayList<Product> getCartList() {
         return cartList;
     }
@@ -386,16 +422,28 @@ public class ShoppingCart extends JFrame {
         this.cartList = cartList;
     }
 
+    /**
+     * This method adds a product to the cart
+     * @param product - the product to be added to the cart
+     */
     public void addProduct(Product product) {
         this.cartList.add(product);
         updateProductPanel();
     }
 
+    /**
+     * This method removes a product from the cart
+     * @param product - the product to be removed from the cart
+     */
     public void removeProduct(Product product) {
         this.cartList.remove(product);
         updateProductPanel();
     }
 
+    /**
+     * This method returns the total cost of the cart
+     * @return - the total cost of the cart
+     */
     public double getTotalCost() {
         double totalCost = 0;
         for (Product product : cartList) {

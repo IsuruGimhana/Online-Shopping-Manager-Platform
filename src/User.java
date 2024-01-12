@@ -11,12 +11,16 @@ public class User {
     private String userName; // user name
     private String userPassword; // user password
 
+    public User() {
+        this.purchasedProductList = new ArrayList<>();
+    }
+
     /**
      * Constructs a new user object
      * @param userName - the user name
      * @param userPassword - the user password
      */
-    public User(String userName, String userPassword){
+    public User(String userName, String userPassword) {
         this.purchasedProductList = new ArrayList<>();
         this.userName = userName;
         this.userPassword = userPassword;
@@ -31,19 +35,16 @@ public class User {
     public String getUserPassword(){
         return userPassword;
     }
-
-
     public void setUserName(String userName){
         this.userName = userName;
     }
     public void setUserPassword(String userPassword){
         this.userPassword = userPassword;
     }
-
     public ArrayList<Product> getPurchasedProductList() {
         return purchasedProductList;
     }
     public void setPurchasedProductList(ArrayList<Product> purchasedProductList) {
-        this.purchasedProductList = purchasedProductList;
+        purchasedProductList = purchasedProductList;
     }
 }

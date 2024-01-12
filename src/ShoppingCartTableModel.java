@@ -43,7 +43,6 @@ public class ShoppingCartTableModel extends AbstractTableModel {
                 case 1:
                     int availableQuantity = productList.get(rowIndex).getNumAvailableItems();
                     if (quantity <= availableQuantity) {
-//                        productList.get(rowIndex).setNumAvailableItems(availableQuantity - quantity);
                         temp = quantity;
                     } else {
                         temp = "Not enough items available";

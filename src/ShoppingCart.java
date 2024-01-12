@@ -10,138 +10,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-//public class ShoppingCart extends JFrame {
-//    private ArrayList<Product> cartList;
-//    private JPanel cartPanel;
-//    JPanel finalPricePanel;
-//
-//    public ArrayList<Product> getCartList() {
-//        return cartList;
-//    }
-//    public void setCartList(ArrayList<Product> cartList) {
-//        this.cartList = cartList;
-//    }
-//
-//    public ShoppingCart() throws HeadlessException {
-//        this.cartList = new ArrayList<>();
-//        setTitle("Shopping Cart");
-//        setSize(800, 600);
-//        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//
-//        cartPanel = new JPanel();
-//        finalPricePanel = new JPanel();
-//
-//        this.getContentPane().setLayout(new GridLayout(2,1));
-//        this.getContentPane().add(cartPanel);
-//        this.getContentPane().add(finalPricePanel);
-//
-//        cartPanel.setBackground(Color.GRAY);
-//        finalPricePanel.setBackground(Color.LIGHT_GRAY);
-//
-//        cartPanel.setLayout(new GridLayout(1,1));
-//        finalPricePanel.setLayout(new GridLayout(4,2));
-//
-//        int quantity = 1;
-//        ShoppingCartTableModel tableModel = new ShoppingCartTableModel(cartList, quantity);
-//        JTable table = new JTable(tableModel);
-//        TableColumn column = table.getColumnModel().getColumn(0);
-//
-//        table.getTableHeader().setPreferredSize(new Dimension(200, 30));
-//        table.setRowHeight(30);
-//        table.getTableHeader().setBackground(Color.LIGHT_GRAY);
-//        table.setShowGrid(true);
-//        table.setGridColor(Color.BLACK);
-//        table.setShowVerticalLines(false);
-//
-//        JScrollPane tableScrollPane = new JScrollPane(table);
-//        cartPanel.add(tableScrollPane);
-//    }
-//
-////        cartPanel.setLayout(new GridLayout(cartList.size() + 1, 3));
-////        finalPricePanel.setLayout(new GridLayout(4, 2));
-//
-////        JLabel productLabel = new JLabel("Product");
-////        JLabel productQuantityLabel = new JLabel("Quantity");
-////        JLabel priceLabel = new JLabel("Price");
-////        cartPanel.add(productLabel);
-////        cartPanel.add(productQuantityLabel);
-////        cartPanel.add(priceLabel);
-////
-////        for (int i = 0 ; i < cartList.size() ; i++) {
-////            String description = "";
-////            if (cartList.get(i) instanceof Electronics) {
-////                Electronics electronics = (Electronics) cartList.get(i);
-////                description =  electronics.getProductId() + "/n" + electronics.getProductName() + "/n" + electronics.getElectronicBrand() + "/n" + electronics.getElectronicWarrantyPeriod() + " months warranty";
-////            } else {
-////                Clothing clothing = (Clothing) cartList.get(i);
-////                description = clothing.getProductId() + "/n" + clothing.getProductName() + "/n" + clothing.getClothingSize() + "/n" + clothing.getClothingColour();
-////            }
-////            JLabel productDescription = new JLabel(description);
-////            cartPanel.add(productDescription);
-////
-////            JPanel productQuantityPanel = new JPanel();
-////            cartPanel.add(productQuantityPanel);
-////            productQuantityPanel.setLayout(new GridLayout(1, 3));
-////
-////            JButton increaseQuantity = new JButton("+");
-////            JLabel defaultProductQuantity = new JLabel("1");
-////            JButton decreaseQuantity = new JButton("-");
-////            productQuantityPanel.add(decreaseQuantity);
-////            productQuantityPanel.add(defaultProductQuantity);
-////            productQuantityPanel.add(increaseQuantity);
-////
-////            int productObjectIndex = i;
-//////            int availableQuantity = cartList.get(i).getNumAvailableItems();
-////            EventListener eventListener = new EventListener(defaultProductQuantity, productObjectIndex);
-////            increaseQuantity.addActionListener(eventListener);
-////            decreaseQuantity.addActionListener(eventListener);
-////
-////            JLabel productPrice = new JLabel(cartList.get(i).getProductPrice() + " LKR");
-////            cartPanel.add(productPrice);
-////        }
-////    }
-//
-//    public class EventListener implements ActionListener {
-//        JLabel defaultProductQuantity;
-////        int availableQuantity;
-//        int productObjectIndex;
-//        public EventListener(JLabel defaultProductQuantity, int productObjectIndex) {
-//            this.defaultProductQuantity = defaultProductQuantity;
-////            this.availableQuantity = availableQuantity;
-//            this.productObjectIndex = productObjectIndex;
-//        }
-//        public void actionPerformed(ActionEvent e) {
-//            int availableQuantity = cartList.get(productObjectIndex).getNumAvailableItems();
-//            JButton button = (JButton) e.getSource();
-//            if (button.getText().equals("+")) {
-//                if (availableQuantity > 0) {
-//                    int quantity = Integer.parseInt(defaultProductQuantity.getText());
-//                    quantity++;
-//                    defaultProductQuantity.setText(quantity + "");
-//                    availableQuantity--;
-//                    Product product = cartList.get(productObjectIndex);
-//                    product.setNumAvailableItems(availableQuantity);
-//                }
-//            } else if (button.getText().equals("-")) {
-//                int quantity = Integer.parseInt(defaultProductQuantity.getText());
-//                if (quantity > 1) {
-//                    quantity--;
-//                    defaultProductQuantity.setText(quantity + "");
-//                    availableQuantity++;
-//                    Product product = cartList.get(productObjectIndex);
-//                    product.setNumAvailableItems(availableQuantity);
-//                }
-//            }
-//        }
-//    }
-
 public class ShoppingCart extends JFrame {
+    // instance variables
+    private ArrayList<Product> cartList; // the list of products in the cart
     User user;
     JPanel productInfoPanel;
-    private ArrayList<Product> cartList;
-//    {{
-//        add(new Electronics("E001", "iPhone 12", 10, 200000, "Apple", 12));
-//        add(new Clothing("C001", "T-Shirt", 20, 1000, "M", "Red"));}};
 
     String[] columnNames = {"Product", "Quantity", "Price"};
     JPanel productPanel;
@@ -150,19 +23,23 @@ public class ShoppingCart extends JFrame {
     JButton removeProductButton;
     JButton plus;
     JButton minus;
-//    double totalCost = 0;
 
+    /**
+     * Constructs a new shopping cart object
+     * @param user - the user
+     * @param productInfoPanel - the product info panel
+     */
     public ShoppingCart(User user, JPanel productInfoPanel) throws HeadlessException {
         this.productInfoPanel = productInfoPanel;
         this.user = user;
-        cartList = new ArrayList<>();
-//        this.cartList = new ArrayList<>();
+        this.cartList = new ArrayList<>();
+
+        // Set the frame properties
         setTitle("Shopping Cart");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-
         this.getContentPane().setLayout(new GridLayout(2,1));
+
         productPanel = new JPanel();
         productPanel.setLayout(new GridLayout(cartList.size() + 1, 3));
         productPanel.setName("productPanel");
@@ -175,101 +52,11 @@ public class ShoppingCart extends JFrame {
 
         updateProductPanel();
 
-//        for (String columnName : columnNames) {
-//            JLabel header = new JLabel(columnName);
-//            header.setOpaque(true);
-//            header.setBackground(Color.LIGHT_GRAY);
-//            header.setPreferredSize(new Dimension(250,30));
-//            header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//            header.setHorizontalAlignment(JLabel.CENTER);
-//            productPanel.add(header);
-//        }
-//
-//        for (Product product : cartList) {
-//            JPanel productDescriptionPanel = new JPanel();
-//            productDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//            productDescriptionPanel.setPreferredSize(new Dimension(250, 60));
-//            productDescriptionPanel.setLayout(new GridLayout(3,1));
-//            JLabel prductId = new JLabel(product.getProductId());
-//            prductId.setHorizontalAlignment(JLabel.CENTER);
-//            JLabel productName = new JLabel(product.getProductName());
-//            productName.setHorizontalAlignment(JLabel.CENTER);
-//            JLabel temp;
-//            if (product instanceof Electronics) {
-//                Electronics electronics = (Electronics) product;
-//                temp = new JLabel(electronics.getElectronicBrand() + ", " + electronics.getElectronicWarrantyPeriod() + " months warranty");
-//            } else {
-//                Clothing clothing = (Clothing) product;
-//                temp = new JLabel(clothing.getClothingSize() + ", " + clothing.getClothingColour());
-//            }
-//            temp.setHorizontalAlignment(JLabel.CENTER);
-//            productDescriptionPanel.add(prductId);
-//            productDescriptionPanel.add(productName);
-//            productDescriptionPanel.add(temp);
-//
-//            JLabel defaultProductQuantity = new JLabel("1");
-//            JLabel productPrice = new JLabel(product.getProductPrice() + " LKR");
-//            productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//            productPrice.setPreferredSize(new Dimension(250, 60));
-//            productPrice.setHorizontalAlignment(JLabel.CENTER);
-//            JPanel quantityPanel = new JPanel();
-//            quantityPanel.setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
-//            quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//            quantityPanel.setPreferredSize(new Dimension(250, 60));
-//            JButton plus = new JButton("+");
-//            JButton minus = new JButton("-");
-//            plus.setPreferredSize(new Dimension(20, 20));
-//            minus.setPreferredSize(new Dimension(20, 20));
-//            quantityPanel.add(minus);
-//            quantityPanel.add(defaultProductQuantity);
-//            quantityPanel.add(plus);
-//            productPanel.add(productDescriptionPanel);
-//            productPanel.add(quantityPanel);
-//            productPanel.add(productPrice);
-//        }
-
         JPanel headerPanel = new JPanel(new FlowLayout());
         headerPanel.add(productPanel);
         JScrollPane scrollPane = new JScrollPane(headerPanel);
         this.getContentPane().add(scrollPane);
 
-
-//        JPanel leftFooterPanel = new JPanel();
-//        leftFooterPanel.setLayout(new GridLayout(4,1));
-//        JPanel rightFooterPanel = new JPanel();
-//        rightFooterPanel.setLayout(new GridLayout(4,1));
-//        JLabel totalLabel = new JLabel("Total: ");
-//        totalLabel.setHorizontalAlignment(JLabel.RIGHT);
-//        JLabel totalValueLabel = new JLabel(totalCost + "");
-//        totalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
-//        JLabel firstPurchaseDiscountLabel = new JLabel("First purchase discount(10%): ");
-//        firstPurchaseDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
-//        JLabel firstPurchaseDiscountValueLabel = new JLabel("-0");
-//        firstPurchaseDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
-//        JLabel sameCategoryDiscountLabel = new JLabel("Three Items in the same category discount(20%): ");
-//        sameCategoryDiscountLabel.setHorizontalAlignment(JLabel.RIGHT);
-//        JLabel sameCategoryDiscountValueLabel = new JLabel("-0");
-//        sameCategoryDiscountValueLabel.setHorizontalAlignment(JLabel.RIGHT);
-//        JLabel finalTotalLabel = new JLabel("Final Total: ");
-//        finalTotalLabel.setHorizontalAlignment(JLabel.RIGHT);
-//        JLabel finalTotalValueLabel = new JLabel("0");
-//        finalTotalValueLabel.setHorizontalAlignment(JLabel.RIGHT);
-//
-//        leftFooterPanel.add(totalLabel);
-//        rightFooterPanel.add(totalValueLabel);
-//        leftFooterPanel.add(firstPurchaseDiscountLabel);
-//        rightFooterPanel.add(firstPurchaseDiscountValueLabel);
-//        leftFooterPanel.add(sameCategoryDiscountLabel);
-//        rightFooterPanel.add(sameCategoryDiscountValueLabel);
-//        leftFooterPanel.add(finalTotalLabel);
-//        rightFooterPanel.add(finalTotalValueLabel);
-//
-//        footerPanel.add(leftFooterPanel, BorderLayout.WEST);
-//        footerPanel.add(rightFooterPanel, BorderLayout.CENTER);
-
-//        updateFinalTotalPanel();
-
-//        JPanel finalTotalPanel = new JPanel(new FlowLayout());
         JPanel finalTotalPanel = new JPanel(new BorderLayout());
         JPanel flowLayoutBuyButtonPanel = new JPanel(new FlowLayout());
         JButton buyButton = new JButton("Buy");
@@ -309,7 +96,7 @@ public class ShoppingCart extends JFrame {
         if (user.getPurchasedProductList().size() == 0) {
             firstPurchaseDiscount = String.format("%.2f", totalCost * 0.1);
         }
-//        BorderLayout exsistingLayout = (BorderLayout) footerPanel.getLayout();
+
         JPanel leftFooterPanel = new JPanel();
         leftFooterPanel.setLayout(new GridLayout(4,1));
         JPanel rightFooterPanel = new JPanel();
@@ -372,14 +159,12 @@ public class ShoppingCart extends JFrame {
                     header.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK));
                 }
             }
-//            header.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
             header.setHorizontalAlignment(JLabel.CENTER);
             productPanel.add(header);
         }
 
         for (int i = 0 ; i < cartList.size() ; i++) {
             JPanel productDescriptionPanel = new JPanel();
-//            productDescriptionPanel.setName("productDescriptionPanel" + i);
             productDescriptionPanel.setLayout(new GridLayout(3,1));
             productDescriptionPanel.setPreferredSize(new Dimension(200,60));
             JLabel prductId = new JLabel(cartList.get(i).getProductId());
@@ -405,11 +190,7 @@ public class ShoppingCart extends JFrame {
             } else {
                 completeProductDescriptionPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
             }
-//            completeProductDescriptionPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
-//            completeProductDescriptionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
-//            completeProductDescriptionPanel.setPreferredSize(new Dimension(250, 60));
             removeProductButton = new JButton("-");
-            //Set the button name
             removeProductButton.setName("removeProductButton" + i);
 
             EventListener removeProductListener = new EventListener();
@@ -428,8 +209,7 @@ public class ShoppingCart extends JFrame {
                 productPrice.setBorder(BorderFactory.createMatteBorder(0,1,0,0,Color.BLACK));
             else
                 productPrice.setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
-//            productPrice.setBorder(BorderFactory.createMatteBorder(0,1,1,0,Color.BLACK));
-//            productPrice.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+
             productPrice.setPreferredSize(new Dimension(250, 60));
             productPrice.setHorizontalAlignment(JLabel.CENTER);
             JPanel quantityPanel = new JPanel();
@@ -439,8 +219,7 @@ public class ShoppingCart extends JFrame {
                 quantityPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,0,Color.BLACK));
             else
                 quantityPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK));
-//            quantityPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK));
-//            quantityPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+
             quantityPanel.setPreferredSize(new Dimension(250, 60));
 
             plus = new JButton("+");
@@ -479,13 +258,11 @@ public class ShoppingCart extends JFrame {
         public void actionPerformed(ActionEvent e) {
             similarButtons.clear();
             JButton clickedButton = (JButton) e.getSource();
-//            String commonButtonName = "";
             String clickedButtonIndex;
             int updateIndex;
             Iterator iterator = productList.iterator();
             if (clickedButton.getName().startsWith("removeProductButton")) {
                 boolean cartProductExists = false;
-//                commonButtonName = clickedButton.getName().substring(0,19);
                 clickedButtonIndex = clickedButton.getName().substring(19);
                 updateIndex = Integer.parseInt(clickedButtonIndex);
                 for (Component componentPanel : productPanel.getComponents()) {
@@ -508,7 +285,6 @@ public class ShoppingCart extends JFrame {
                             if ((product.getProductId().equals(cartList.get(updateIndex).getProductId()))) {
                                 int resetQuantity = cartList.get(updateIndex).getNumAvailableItems();
                                 cartProductExists = true;
-//                                cartList.remove(updateIndex);
                                 product.setNumAvailableItems(product.getNumAvailableItems() + resetQuantity);
                             }
                         }
@@ -520,7 +296,6 @@ public class ShoppingCart extends JFrame {
                 }
 
             } else if (clickedButton.getName().startsWith("plus")) {
-//                commonButtonName = clickedButton.getName().substring(0,4);
                 clickedButtonIndex = clickedButton.getName().substring(4);
                 updateIndex = Integer.parseInt(clickedButtonIndex);
                 for (Component componentPanel : productPanel.getComponents()) {
@@ -538,11 +313,9 @@ public class ShoppingCart extends JFrame {
 
                 for (int i = 0; i < similarButtons.size(); i++) {
                     if (similarButtons.get(i).equals("plus" + clickedButtonIndex)) {
-//                        productList = WestminsterShoppingManager.getProductList();
                         for (Product product : productList) {
                             if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (product.getNumAvailableItems() > cartList.get(updateIndex).getNumAvailableItems())) {
                                 cartList.get(updateIndex).setNumAvailableItems(cartList.get(updateIndex).getNumAvailableItems() + 1);
-//                                product.setNumAvailableItems(product.getNumAvailableItems() - 1);
                                 cartList.get(updateIndex).setProductPrice(cartList.get(updateIndex).getNumAvailableItems() * product.getProductPrice());
                                 updateProductPanel();
                             } else if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (product.getNumAvailableItems() == cartList.get(updateIndex).getNumAvailableItems())) {
@@ -552,7 +325,6 @@ public class ShoppingCart extends JFrame {
                     }
                 }
             } else if (clickedButton.getName().startsWith("minus")) {
-//                commonButtonName = clickedButton.getName().substring(0,5);
                 clickedButtonIndex = clickedButton.getName().substring(5);
                 updateIndex = Integer.parseInt(clickedButtonIndex);
                 for (Component componentPanel : productPanel.getComponents()) {
@@ -570,11 +342,9 @@ public class ShoppingCart extends JFrame {
 
                 for (int i = 0; i < similarButtons.size(); i++) {
                     if (similarButtons.get(i).equals("minus" + clickedButtonIndex)) {
-//                        productList = WestminsterShoppingManager.getProductList();
                         for (Product product : productList) {
                             if ((product.getProductId().equals(cartList.get(updateIndex).getProductId())) && (cartList.get(updateIndex).getNumAvailableItems() > 0)) {
                                 cartList.get(updateIndex).setNumAvailableItems(cartList.get(updateIndex).getNumAvailableItems() - 1);
-//                                product.setNumAvailableItems(product.getNumAvailableItems() + 1);
                                 cartList.get(updateIndex).setProductPrice(cartList.get(updateIndex).getNumAvailableItems() * product.getProductPrice());
                                 updateProductPanel();
                             }

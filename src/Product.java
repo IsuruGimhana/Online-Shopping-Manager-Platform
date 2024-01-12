@@ -23,6 +23,10 @@ public abstract class Product implements Comparable<Product> {
         this.productPrice = productPrice;
     }
 
+    /**
+     * Constructs a new product object
+     * @param cartProduct - the product to be added to the cart
+    */
     public Product(Product cartProduct) {
         this.productId = cartProduct.getProductId();
         this.productName = cartProduct.getProductName();
@@ -45,10 +49,10 @@ public abstract class Product implements Comparable<Product> {
         return productPrice;
     }
 
-    public void setProductId() {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
-    public void setProductName() {
+    public void setProductName(String productName) {
         this.productName = productName;
     }
     public void setNumAvailableItems(int numAvailableItems) {
@@ -58,6 +62,7 @@ public abstract class Product implements Comparable<Product> {
         this.productPrice = productPrice;
     }
 
+    //toString method
     @Override
     public String toString() {
         return "productId='" + productId + "'" +
@@ -65,6 +70,9 @@ public abstract class Product implements Comparable<Product> {
                 ", numAvailableItems=" + numAvailableItems +
                 ", productPrice=" + productPrice;
     }
+
+    //compareTo method
+    @Override
     public int compareTo(Product product) {
         // compare  the product id's alphabetically first
         int comparedStringValue = this.productId.compareToIgnoreCase(product.getProductId());

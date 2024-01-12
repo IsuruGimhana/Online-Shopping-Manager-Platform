@@ -23,6 +23,10 @@ public class Clothing extends Product {
         this.clothingColour = clothingColour;
     }
 
+    /**
+     * Constructs a new clothing object
+     * @param cartProduct - the product to be added to the cart
+     */
     public Clothing(Product cartProduct) {
         super(cartProduct);
         this.clothingSize = ((Clothing)cartProduct).getClothingSize();
@@ -45,6 +49,7 @@ public class Clothing extends Product {
         this.clothingColour = clothingColour;
     }
 
+    //toString method
     @Override
     public String toString() {
         return "Clothing{" +

@@ -23,6 +23,10 @@ public class Electronics extends Product {
         this.electronicWarrantyPeriod = electronicWarrantyPeriod;
     }
 
+    /**
+     * Constructs a new electronics object
+     * @param cartProduct - the product to be added to the cart
+     */
     public Electronics(Product cartProduct) {
         super(cartProduct);
         this.electronicBrand = ((Electronics)cartProduct).getElectronicBrand();
@@ -45,6 +49,7 @@ public class Electronics extends Product {
         this.electronicWarrantyPeriod = electronicWarrantyPeriod;
     }
 
+    //toString method
     @Override
     public String toString() {
         return "Electronics{" +

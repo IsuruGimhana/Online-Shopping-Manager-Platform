@@ -1,20 +1,36 @@
+/**
+ * This class represents the product table model
+ *
+ * @author Isuru Gimhana
+ */
+
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 public class ProductTableModel extends AbstractTableModel {
+    //ArrayList to store the products
     private ArrayList<Product> productList;
+
+    //Column names for the table
     private String[] columnNames = {"Product ID", "Name", "Category", "Price", "Info"};
+
+    //Constructor
     public ProductTableModel(ArrayList<Product> productList) {
         this.productList = productList;
     }
 
+    //Setter for the productList
     public void setProductList(ArrayList<Product> productList) {
         this.productList = productList;
     }
+
+    //Getter for the productList
     public ArrayList<Product> getProductList() {
         return productList;
     }
 
+
+    //Overridden methods
     @Override
     public int getRowCount() {
         return productList.size();

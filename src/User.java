@@ -1,10 +1,10 @@
-import java.util.ArrayList;
-
 /**
  * This class represents the user account
  *
  * @author Isuru Gimhana
  */
+import java.util.ArrayList;
+
 public class User {
     // instance variables
     private static ArrayList<Product> purchasedProductList; // the list of purchased products

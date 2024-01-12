@@ -1,3 +1,9 @@
+/**
+ * This interface represents the user Westminster Shopping Manager
+ *
+ * @author Isuru Gimhana
+ */
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,11 +13,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Scanner;
 
-/**
- * This interface represents the user Westminster Shopping Manager
- *
- * @author Isuru Gimhana
- */
 public class WestminsterShoppingManager implements ShoppingManager{
 
     //product list cannot be modified but it will be accessible for all the instances of this class
@@ -28,7 +29,12 @@ public class WestminsterShoppingManager implements ShoppingManager{
         return PRODUCT_LIST;
     }
 
+    public static int getMaxProduct() {
+        return MAX_PRODUCT;
+    }
+
     // main menu
+    @Override
     public void menu() {
         System.out.println("------------------------------------------------------\n" +
                 "------------------------------------------------------\n" +
@@ -220,6 +226,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
 
     // load the product list from a file
+    @Override
     public void loadProductList() {
         File file = new File("Existing Products/saveProductList.txt");
         if (!file.exists()) {
@@ -257,6 +264,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
 
     // error handling methods for integer inputs
+    @Override
     public int nextIntErrorHandling(String message, String condition, String operator) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -292,6 +300,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
 
     // error handling methods for string inputs
+    @Override
     public String nextLineErrorHandling(String message, String condition, String operator) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -315,6 +324,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
 
     // error handling methods for string inputs
+    @Override
     public String nextErrorHandling(String message, String condition, String operator) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -345,6 +355,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     }
 
     // error handling methods for double inputs
+    @Override
     public double nextDoubleErrorHandling(String message, String condition, String operator) {
         Scanner scanner = new Scanner(System.in);
         while (true) {

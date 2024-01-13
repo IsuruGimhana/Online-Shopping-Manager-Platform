@@ -7,13 +7,11 @@ import java.util.ArrayList;
 
 public class User {
     // instance variables
-    private static ArrayList<Product> purchasedProductList; // the list of purchased products
+    private static ArrayList<Product> purchasedProductList = new ArrayList<>();; // the list of purchased products
     private String userName; // user name
     private String userPassword; // user password
 
-    public User() {
-        this.purchasedProductList = new ArrayList<>();
-    }
+    public User() {}
 
     /**
      * Constructs a new user object
@@ -21,7 +19,6 @@ public class User {
      * @param userPassword - the user password
      */
     public User(String userName, String userPassword) {
-        this.purchasedProductList = new ArrayList<>();
         this.userName = userName;
         this.userPassword = userPassword;
     }

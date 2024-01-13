@@ -139,6 +139,16 @@ public class WestminsterShoppingManager implements ShoppingManager{
                     "The product list is empty!");
             menu();
         }
+        // display the product list
+        for (Product product : PRODUCT_LIST) {
+            if (product instanceof Electronics) {
+                Electronics electronics = (Electronics) product;
+                System.out.println(electronics.toString());
+            } else {
+                Clothing clothing = (Clothing) product;
+                System.out.println(clothing.toString());
+            }
+        }
         System.out.println("------------------------------------------------------\n" +
                 "1. Delete an Electronic product from the system\n" +
                 "2. Delete a Clothing product from the system\n" +
@@ -152,10 +162,10 @@ public class WestminsterShoppingManager implements ShoppingManager{
             productId = nextErrorHandling("Enter product id (format: C001): ", "4", "C==");
         }
         Iterator<Product> iterator = PRODUCT_LIST.iterator();
+        boolean deleted = false;
         while (iterator.hasNext()) {
             Product product = iterator.next();
             if (product.getProductId().equals(productId)) {
-//                System.out.println(product);
                 if (product instanceof Electronics) {
                     Electronics electronics = (Electronics) product;
                     System.out.println(electronics.toString());
@@ -167,11 +177,12 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 System.out.println("\nProduct deleted successfully!");
                 int totalProducts = PRODUCT_LIST.size();
                 System.out.println("Total number of products left in the System: " + totalProducts);
+                deleted = true;
                 break;
-            } else {
-                System.out.println("\n" +
-                        "Product not found!");
             }
+        }
+        if (!deleted) {
+            System.out.println("\nProduct not found!");
         }
         System.out.println("------------------------------------------------------");
         String answer2 = nextErrorHandling("Do you want to delete another product? (Y/N): ", "Y, N", "===");
@@ -188,7 +199,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     public void printProductList() {
         Collections.sort(PRODUCT_LIST);
         if (PRODUCT_LIST.size() == 0) {
-            System.out.println("The product list is empty!");
+            System.out.println("\nThe product list is empty!");
             menu();
         }
         for (Product product : PRODUCT_LIST) {
@@ -208,11 +219,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     @Override
     public void saveProductList() throws IOException {
         File file = new File("Existing Products/saveProductList.txt");
-        if (file.exists()) {
-            file.delete();
-        }
-        System.out.println(PRODUCT_LIST.size());
-        try(FileWriter fileWriter = new FileWriter(file, true);
+        try(FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
                 for (Product product : PRODUCT_LIST) {
                     bufferedWriter.write(product.toString());
@@ -229,7 +236,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
     @Override
     public void loadProductList() {
         File file = new File("Existing Products/saveProductList.txt");
-        if (!file.exists()) {
+        if (!file.exists() || file.length() == 0) {
             return;
         }
         try(Scanner scanner = new Scanner(file)) {
